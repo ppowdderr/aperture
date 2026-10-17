@@ -25,6 +25,9 @@ npm run dev                     # http://localhost:3000
 
 Checks (CI runs the same): `npm run lint && npm run typecheck && npm test && npm run build`.
 
+Windows/UU Remote setup notes, including the ticket #6 Chrome prerequisite, are in
+[`docs/windows-setup.md`](docs/windows-setup.md).
+
 ## Layout
 
 ```
