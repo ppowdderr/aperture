@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Course, Preferences, Slot } from "../types";
-import { WEIGHTS, chosenSlots, fmtTime, score } from "./score";
+import { WEIGHTS, chosenSlots, fmtHours, fmtTime, score } from "./score";
 
 function course(code: string, title: string): Course {
   return { code, title, credits: 20, level: 10, semester: 1, school: "Informatics", prerequisitesText: "", drpsUrl: "" };
@@ -99,8 +99,13 @@ describe("score", () => {
     expect(a.violations.length).toBe(4);
   });
 
-  it("formats times", () => {
+  it("formats times and hours", () => {
     expect(fmtTime(540)).toBe("09:00");
     expect(fmtTime(1010)).toBe("16:50");
+    expect(fmtHours(4)).toBe("4");
+    expect(fmtHours(25 / 6)).toBe("4.2");
+    const r = score([SEC, CT], {}, [slot("INFR10067", 2, 600, 660), slot("INFR10065", 2, 910, 960)], prefs({ maxGapHours: 3 }));
+    expect(r.violations[0]).toMatch(/^4\.2 h gap before/);
+    expect(Number.isInteger(score([SEC], {}, [slot("INFR10067", 0, 600, 650)], prefs({ blocks: [{ id: "b", day: 0, start: 540, end: 720, kind: "avoid" }] })).score)).toBe(true);
   });
 });

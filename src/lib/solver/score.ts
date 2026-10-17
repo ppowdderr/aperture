@@ -25,6 +25,11 @@ const EARLY = 10 * 60;
 const LATE = 17 * 60;
 const DAY = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
+/** Hours to one decimal, without a trailing .0: 4 → "4", 4.1666 → "4.2". */
+export function fmtHours(hours: number): string {
+  return String(Math.round(hours * 10) / 10);
+}
+
 export function fmtTime(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
@@ -111,7 +116,7 @@ export function score(
       if (hours > prefs.maxBackToBackHours) {
         total += WEIGHTS.longRun;
         violations.push(
-          `${hours} h back-to-back ending with ${label(byCode.get(endSlot.course), endSlot)} ${when(endSlot)}`,
+          `${fmtHours(hours)} h back-to-back ending with ${label(byCode.get(endSlot.course), endSlot)} ${when(endSlot)}`,
         );
       }
     };
@@ -121,7 +126,7 @@ export function score(
         const gap = (slot.start - runEnd) / 60;
         if (gap > prefs.maxGapHours) {
           total += WEIGHTS.longGap;
-          violations.push(`${gap} h gap before ${label(byCode.get(slot.course), slot)} ${when(slot)}`);
+          violations.push(`${fmtHours(gap)} h gap before ${label(byCode.get(slot.course), slot)} ${when(slot)}`);
         }
         closeRun(prev);
         runStart = slot.start;
@@ -154,5 +159,5 @@ export function score(
   }
 
   violations.sort();
-  return { score: total, violations };
+  return { score: Math.round(total), violations };
 }

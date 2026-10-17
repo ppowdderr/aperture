@@ -12,6 +12,9 @@ export interface ResultsProps {
   slots: Slot[];
   preferences: Preferences;
   onPreferencesChange: (next: Preferences) => void;
+  /** Controlled plan index; omit to let Results keep its own. */
+  selected?: number;
+  onSelect?: (index: number) => void;
 }
 
 const SEM_LABEL = { 1: "S1", 2: "S2", full: "S1+2" } as const;
@@ -34,9 +37,13 @@ export function togglePreference(prefs: Preferences, code: string, list: "pinned
   };
 }
 
-export function Results({ solutions, courses, slots, preferences, onPreferencesChange }: ResultsProps) {
-  const [selected, setSelected] = useState(0);
-  const index = Math.min(selected, Math.max(0, solutions.length - 1));
+export function Results({ solutions, courses, slots, preferences, onPreferencesChange, selected, onSelect }: ResultsProps) {
+  const [internal, setInternal] = useState(0);
+  const index = Math.min(selected ?? internal, Math.max(0, solutions.length - 1));
+  const select = (i: number) => {
+    setInternal(i);
+    onSelect?.(i);
+  };
   const solution = solutions[index];
   const byCode = new Map(courses.map((c) => [c.code, c]));
 
@@ -62,7 +69,7 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
             role="tab"
             type="button"
             aria-selected={i === index}
-            onClick={() => setSelected(i)}
+            onClick={() => select(i)}
             className={`rounded-[5px] px-3 py-1 outline-none focus-visible:ring-2 focus-visible:ring-accent ${
               i === index ? "bg-panel text-fg shadow-[inset_0_0_0_1px_var(--color-line-strong)]" : "text-fg-muted hover:text-fg"
             }`}
