@@ -1,6 +1,9 @@
 import mongoose, { Schema, type Model, type SchemaDefinition } from "mongoose";
 import type { Course } from "../../types";
 
+// Without a live connection, queries fail at once instead of buffering for 10 s; routes then fall back to JSON.
+mongoose.set("bufferCommands", false);
+
 const courseDefinition = {
   code: { type: String, required: true, trim: true },
   title: { type: String, required: true, trim: true },
