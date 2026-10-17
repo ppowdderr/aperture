@@ -5,6 +5,7 @@ import { loadProgramme, loadSlots } from "@/lib/data";
 import { SlotModel } from "@/lib/db/models";
 import { slotListSchema } from "@/lib/schemas";
 import type { ProgrammeYear } from "@/lib/types";
+import { normaliseSlotRows } from "./normalise";
 
 const querySchema = z.object({
   programme: z.string().trim().regex(/^[A-Za-z0-9]+$/),
@@ -91,7 +92,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   if (rows.length > 0) {
-    const parsed = slotListSchema.safeParse(rows);
+    const parsed = slotListSchema.safeParse(normaliseSlotRows(rows));
     if (!parsed.success) {
       return Response.json(
         {

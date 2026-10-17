@@ -28,6 +28,21 @@ Checks (CI runs the same): `npm run lint && npm run typecheck && npm test && npm
 Windows/UU Remote setup notes, including the ticket #6 Chrome prerequisite, are in
 [`docs/windows-setup.md`](docs/windows-setup.md).
 
+## Deploy
+
+The public deployment runs at <https://aperture-one-ruby.vercel.app> on Vercel Hobby.
+
+Configure these environment variables in the Vercel project:
+
+- `LLM_BASE_URL=https://api.deepseek.com`
+- `LLM_MODEL=deepseek-flash`
+- `LLM_API_KEY` — server-side secret only; never commit it
+- `MONGODB_URI` — optional. The production project is connected to the seeded Atlas database;
+  every read route also falls back to the checked-in `data/*.json` files when Mongo is unavailable.
+
+For local development, put the same values in the git-ignored `.env.local`. Atlas is not required for
+the demo deployment.
+
 ## Layout
 
 ```
