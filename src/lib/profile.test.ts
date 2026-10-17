@@ -28,4 +28,20 @@ describe("profile", () => {
     expect(loadProfile()).toBeNull();
     expect(loadProfile(undefined)).toBeNull();
   });
+
+  it("round-trips confirmed degree rules", () => {
+    const rule = {
+      kind: "mustPassBefore" as const,
+      course: "INFR07003",
+      year: 2,
+      source: "Students must pass INFR07003 before Year 2.",
+      url: "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-1",
+    };
+    const withRules: StudentState = { ...student, confirmedRules: [rule] };
+
+    const parsed = parseProfile(profileJson(withRules));
+
+    expect(parsed).toEqual({ ok: true, student: { ...withRules, passed: ["INFR08026", "INFR08027"] } });
+    expect(JSON.parse(profileJson(withRules)).confirmedRules).toEqual([rule]);
+  });
 });

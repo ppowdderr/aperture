@@ -146,6 +146,44 @@ describe("searchLegalYears", () => {
       expect.arrayContaining(["INFR10001", "INFR10002"]),
     );
   });
+
+  it("filters candidates using a confirmed prerequisite rule", () => {
+    const rule = {
+      kind: "prerequisite" as const,
+      course: "INFR10013",
+      requires: ["INFR09099"],
+      source: "A confirmed prerequisite sentence.",
+      url: "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm",
+    };
+    const out = searchLegalYears({
+      programme,
+      courses,
+      student: student(),
+      rules: [rule],
+    });
+
+    expect(out.length).toBeGreaterThan(0);
+    expect(out.every((year) => !year.courses.includes("INFR10013"))).toBe(true);
+  });
+
+  it("returns no legal year when a confirmed progression rule is unmet", () => {
+    const rule = {
+      kind: "mustPassBefore" as const,
+      course: "INFR10001",
+      year: 3,
+      source: "A confirmed progression sentence.",
+      url: "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm",
+    };
+
+    expect(
+      searchLegalYears({
+        programme,
+        courses,
+        student: student(),
+        rules: [rule],
+      }),
+    ).toEqual([]);
+  });
 });
 
 describe("parsePrerequisites", () => {

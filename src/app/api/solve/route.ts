@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { z } from "zod";
 import { loadCourses, loadProgramme, loadSlots } from "@/lib/data";
+import { ruleSchema } from "@/lib/schemas";
 import { solve } from "@/lib/solver";
 import type { Preferences, StudentState } from "@/lib/types";
 
@@ -39,6 +40,7 @@ export const studentSchema = z
     year,
     passed: z.array(courseCode).max(200),
     background: z.record(z.string(), z.string()),
+    confirmedRules: z.array(ruleSchema).max(50).optional(),
   })
   .strict() satisfies z.ZodType<StudentState>;
 

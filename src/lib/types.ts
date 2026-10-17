@@ -88,6 +88,8 @@ export interface StudentState {
   year: ProgrammeYear["year"];
   passed: string[];
   background: Record<string, string>;   // e.g. { maths: "A-level A*" } for conditional rules
+  /** Degree rules explicitly accepted by the student after prose extraction. */
+  confirmedRules?: Rule[];
 }
 
 export interface Solution {
