@@ -26,7 +26,14 @@ export function splitViolations(violations: readonly string[]): { misses: string
   };
 }
 
-const missCount = (s: Solution) => splitViolations(s.violations).misses.length;
+/** Tab caption: "fits" only when nothing at all is violated. */
+export function fitLabel(s: Solution): string {
+  const { misses, unavoidable } = splitViolations(s.violations);
+  const parts: string[] = [];
+  if (misses.length) parts.push(`${misses.length} ${misses.length === 1 ? "miss" : "misses"}`);
+  if (unavoidable.length) parts.push(misses.length ? `${unavoidable.length} forced` : `${unavoidable.length} forced ${unavoidable.length === 1 ? "miss" : "misses"}`);
+  return parts.length ? parts.join(" · ") : "fits";
+}
 
 const SEM_LABEL = { 1: "S1", 2: "S2", full: "S1+2" } as const;
 
@@ -90,7 +97,7 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
           >
             Plan {i + 1}
             <span className="ml-2 font-mono text-[12px] text-fg-faint">
-              {missCount(s) === 0 ? "fits" : `${missCount(s)} ${missCount(s) === 1 ? "miss" : "misses"}`}
+              {fitLabel(s)}
             </span>
           </button>
         ))}
@@ -175,7 +182,7 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
 
         <section aria-label="Misses" className="min-w-0">
           <h3 className="mb-1 text-[13px] text-fg-muted">
-            {misses.length === 0 ? "Fits everything you asked for" : "Where it misses"}{" "}
+            {misses.length > 0 ? "Where it misses" : unavoidable.length > 0 ? "Only forced misses" : "Fits everything you asked for"}{" "}
             <span className="font-mono text-fg-faint">score {solution.score}</span>
           </h3>
           {misses.length > 0 && (
@@ -188,18 +195,18 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
             </ul>
           )}
           {unavoidable.length > 0 && (
-            <details className="mt-2 text-[13px] text-fg-faint">
-              <summary className="cursor-pointer select-none">
-                {unavoidable.length} {unavoidable.length === 1 ? "clash" : "clashes"} with your wants come from compulsory courses — no plan can avoid them
-              </summary>
-              <ul className="mt-1 max-h-32 divide-y divide-line overflow-auto rounded-md border border-line bg-panel-2">
+            <div className="mt-3">
+              <h4 className="mb-1 text-[13px] text-fg-muted">
+                Forced by compulsory courses — no plan for this year can avoid {unavoidable.length === 1 ? "it" : "them"}
+              </h4>
+              <ul className="max-h-40 divide-y divide-line overflow-auto rounded-md border border-line bg-panel-2 text-[14px] leading-snug text-fg-faint">
                 {unavoidable.map((v) => (
-                  <li key={v} className="px-3 py-1.5">
+                  <li key={v} className="px-3 py-2">
                     {v}
                   </li>
                 ))}
               </ul>
-            </details>
+            </div>
           )}
         </section>
       </div>

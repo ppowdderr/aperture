@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Course, Preferences, Slot, Solution } from "../lib/types";
-import { Results, togglePreference } from "./Results";
+import { Results, fitLabel, togglePreference } from "./Results";
 import { emptyPreferences } from "./WeekGrid";
 import { layoutLanes, mergeWeekRanges } from "./WeekView";
 
@@ -78,6 +78,16 @@ describe("Results", () => {
     expect(cells.join("\n")).toContain("AT 2.12 · Central");
     const s2 = screen.getByRole("group", { name: "Semester 2 timetable" });
     expect(s2.querySelectorAll("[title]")).toHaveLength(1);
+  });
+
+  it("never says fits while anything is violated", () => {
+    expect(fitLabel(solution({ violations: [] }))).toBe("fits");
+    expect(fitLabel(solution({ violations: ["Unavoidable: INFR08030 lecture S1 Tue 10:10–11:00 falls in time you kept free"] }))).toBe("1 forced miss");
+    expect(fitLabel(solution({ violations: ["a", "b", "Unavoidable: c"] }))).toBe("2 misses · 1 forced");
+    setup([solution({ violations: ["Unavoidable: INFR08030 lecture S1 Tue 10:10–11:00 falls in time you kept free"] })]);
+    expect(screen.getAllByRole("tab")[0].textContent).toContain("1 forced miss");
+    expect(screen.getByText("Only forced misses")).toBeTruthy();
+    expect(screen.getByText(/INFR08030 lecture S1 Tue 10:10–11:00/)).toBeTruthy();
   });
 
   it("switches plans with the tabs", () => {
