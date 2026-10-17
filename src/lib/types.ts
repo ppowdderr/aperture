@@ -22,6 +22,7 @@ export interface OptionGroup {
   courses: string[];        // course codes; empty means "any course matching `schedules`"
   schedules?: string;       // e.g. "Level 9 and 10 courses in Schedules A to Q"
   notesText: string;        // raw prose under the group
+  parent?: string;          // set on sub-rules nested inside a DPT block, e.g. "A" for "A.1"
 }
 
 export interface ProgrammeYear {
