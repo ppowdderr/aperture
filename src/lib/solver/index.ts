@@ -10,6 +10,7 @@ export interface SolveInput {
 }
 
 /** Owned by the solver tickets (M2). Stub so the API route and UI can be built against the type. */
-export function solve(_input: SolveInput): Solution[] {
+export function solve(input: SolveInput): Solution[] {
+  void input;
   return [];
 }
