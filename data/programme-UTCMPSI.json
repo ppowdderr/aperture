@@ -4,8 +4,8 @@
     "programmeTitle": "Computer Science (BSc Hons)",
     "year": 1,
     "compulsory": [
-      "INFR08025",
-      "INFR08029",
+      "INFR07003",
+      "INFR08035",
       "MATH08079"
     ],
     "groups": [
@@ -15,34 +15,74 @@
         "minCredits": 60,
         "maxCredits": 60,
         "courses": [
-          "MATH07005"
+          "INFR07004",
+          "MATH07005",
+          "BIME08006",
+          "EDUA08116",
+          "EDUA08126",
+          "EDUA08127",
+          "EFIE08008",
+          "GESC08004",
+          "INFR08034",
+          "SSPS08012",
+          "VETS08016"
         ],
         "notesText": "Select exactly 60 credits in this group."
       },
       {
         "id": "A.1",
+        "title": "Informatics 1 - Introduction to Programming",
+        "minCredits": 0,
+        "maxCredits": 20,
+        "courses": [
+          "INFR07004"
+        ],
+        "notesText": "The course Informatics 1 - Introduction to Programming INFR07004 (INF1-IP) is required for students without significant programming and software engineering experience prior to University, which may have come through formal qualifications or personal practice. Students with grade A at Advanced Higher Computing Science or A-level Computer Science are not permitted to take the course. Other students are required to take a diagnostic test which will indicate whether they are able to opt out of the course or not. IF you are required to take INF1-IP THEN you Must Pass it.",
+        "parent": "A"
+      },
+      {
+        "id": "A.2",
         "title": "Calculus and Algebra Fundamentals for Informatics",
         "minCredits": 0,
         "maxCredits": 20,
         "courses": [
           "MATH07005"
         ],
-        "notesText": "Calculus and Algebra for Informatics MATH07005 (CAFI) is required for students with Higher Mathematics only, or Advanced Higher less than Grade A, or A-level Mathematics less than grade A, or equivalent. It is not recommended for students with A-level Mathematics at Grade A*, or SQA Advanced Higher at Grade A, or equivalent.",
+        "notesText": "Calculus and Algebra for Informatics MATH07005 (CAFI) is required for students with Higher Mathematics only, or Advanced Higher less than Grade A, or A-level Mathematics less than grade A, or equivalent. It is not recommended for students with A-level Mathematics at Grade A*, or SQA Advanced Higher at Grade A, or equivalent. IF you are required to take CAFI THEN you Must Pass it.",
         "parent": "A"
       },
       {
-        "id": "A.2",
-        "title": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
-        "minCredits": 40,
+        "id": "A.3",
+        "title": "Challenge Courses: Engaging with complex problems through interdisciplinary collaboration",
+        "minCredits": 0,
+        "maxCredits": 20,
+        "courses": [
+          "BIME08006",
+          "EDUA08116",
+          "EDUA08126",
+          "EDUA08127",
+          "EFIE08008",
+          "GESC08004",
+          "INFR08034",
+          "SSPS08012",
+          "VETS08016"
+        ],
+        "notesText": "Challenge Courses are designed to bring together students from different degree programmes to explore the complex issues facing the world today through interdisciplinary collaboration and creative thinking. Working with each other and expert academics, students will gain new perspectives and develop important life skills highly valued by employers, such as teamwork, problem-solving and adaptability.",
+        "parent": "A"
+      },
+      {
+        "id": "A.4",
+        "title": "Level 7 and 8 courses in Schedules A to T, W and Y",
+        "minCredits": 0,
         "maxCredits": 60,
         "courses": [],
-        "schedules": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
+        "schedules": "Level 7 and 8 courses in Schedules A to T, W and Y",
         "notesText": "",
         "parent": "A"
       }
     ],
-    "notesText": "Before making your course choices, make sure you have discussed them with your Student Adviser, or someone in your Student Support Team. Please note that all students must pass Informatics 1 - Introduction to Computation INFR08025 (INF1A), and Informatics 1 - Object Oriented Programming INFR08029 (INF1B) before they are allowed to progress into Year 2 of this degree.",
-    "drpsUrl": "https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-1"
+    "notesText": "Before making your course choices, make sure you have discussed them with your Student Adviser, or someone in your Student Support Team. Please note that all students must pass Informatics 1 - Critical Skills and Practice INFR07003 (INF1-CRISP), and Informatics 1 - Foundations of Computing INFR08035 (INF1-FC) before they are allowed to progress into Year 2 of this degree.",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-1"
   },
   {
     "programmeCode": "UTCMPSI",
@@ -58,16 +98,16 @@
     "groups": [
       {
         "id": "R1",
-        "title": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
+        "title": "Level 7 and 8 courses in Schedules A to T, W and Y",
         "minCredits": 20,
         "maxCredits": 20,
         "courses": [],
-        "schedules": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
+        "schedules": "Level 7 and 8 courses in Schedules A to T, W and Y",
         "notesText": "These are courses in all Schools other than Medicine, or the Centre for Open Learning."
       }
     ],
     "notesText": "Before making your course choices make sure you have discussed them with your Student Adviser, or someone in your Student Support Team.",
-    "drpsUrl": "https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-2"
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-2"
   },
   {
     "programmeCode": "UTCMPSI",
@@ -76,17 +116,16 @@
     "compulsory": [
       "INFR10022",
       "INFR10067",
-      "INFR09051"
+      "INFR09051",
+      "INFR09032"
     ],
     "groups": [
       {
         "id": "A",
         "title": "Group A",
-        "minCredits": 70,
-        "maxCredits": 70,
+        "minCredits": 50,
+        "maxCredits": 50,
         "courses": [
-          "INFR09032",
-          "INFR09053",
           "INFR10052",
           "INFR10054",
           "INFR10057",
@@ -99,22 +138,10 @@
           "INFR10090",
           "INFR10078"
         ],
-        "notesText": "Select exactly 70 credits in this group."
+        "notesText": "Select exactly 50 credits in this group."
       },
       {
         "id": "A.1",
-        "title": "Informatics Hons 3rd Year Group Project",
-        "minCredits": 20,
-        "maxCredits": 20,
-        "courses": [
-          "INFR09032",
-          "INFR09053"
-        ],
-        "notesText": "",
-        "parent": "A"
-      },
-      {
-        "id": "A.2",
         "title": "Informatics Hons 3rd Year 10-credit Courses",
         "minCredits": 10,
         "maxCredits": 10,
@@ -129,7 +156,7 @@
         "parent": "A"
       },
       {
-        "id": "A.3",
+        "id": "A.2",
         "title": "Informatics Hons 3rd Year Sem 2 CS Courses",
         "minCredits": 20,
         "maxCredits": 40,
@@ -144,7 +171,7 @@
         "parent": "A"
       },
       {
-        "id": "A.4",
+        "id": "A.3",
         "title": "Informatics Hons 3rd Year Sem 2 AI Courses",
         "minCredits": 0,
         "maxCredits": 20,
@@ -157,18 +184,18 @@
         "parent": "A"
       },
       {
-        "id": "A.5",
-        "title": "Level 9 and 10 courses in Schedules A to Q, T and W",
+        "id": "A.4",
+        "title": "Level 9 and 10 courses in Schedules A to R, T and W",
         "minCredits": 0,
         "maxCredits": 20,
         "courses": [],
-        "schedules": "Level 9 and 10 courses in Schedules A to Q, T and W",
+        "schedules": "Level 9 and 10 courses in Schedules A to R, T and W",
         "notesText": "These are courses in all Schools other than Medicine, Veterinary Studies, or the Centre for Open Learning, and include courses normally taken by fourth-year students. In the case that this DPT option is chosen, you are advised to obtain permission to take the course from the Course Organiser, and have the course choice approved by your student support team.",
         "parent": "A"
       }
     ],
     "notesText": "Before making your course choices make sure you have discussed them with your Student Adviser, or someone in your Student Support Team. Some third year courses are prerequisites for specific fourth year courses, you are advised to consider your plans for fourth year when making your course choices. Students who are members of Edinburgh University Formula Student may request a concession from the School Curriculum Approval Officer (SCAO) to replace System Design Project INFR09032 (SDP) with Informatics Experiential Learning (Level 10) INFR10084 (IEL-10). Please contact your Student Support Team to gain approval from the IEL-10 Course Organiser, confirming your eligibility for that course, and they will then pass to the SCAO.",
-    "drpsUrl": "https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-3"
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-3"
   },
   {
     "programmeCode": "UTCMPSI",
@@ -192,33 +219,33 @@
           "INFR10067",
           "INFR10074",
           "INFR10076",
-          "INFR10077",
           "INFR10079",
           "INFR10080",
           "INFR10086",
           "INFR10090",
-          "INFR11017",
-          "INFR11022",
           "INFR11098",
-          "INFR11134",
           "INFR11144",
           "INFR11150",
+          "INFR11208",
           "INFR11217",
           "INFR11218",
           "INFR11221",
           "INFR11223",
           "INFR11226",
           "INFR11227",
-          "INFR11228",
           "INFR11229",
           "INFR11230",
           "INFR11233",
           "INFR11246",
           "INFR11247",
           "INFR11249",
-          "INFR11255",
           "INFR11256",
           "INFR11289",
+          "INFR11298",
+          "INFR11299",
+          "INFR11301",
+          "INFR11305",
+          "INFR11306",
           "PHIL10133",
           "INFR10054",
           "INFR10078",
@@ -226,7 +253,6 @@
           "INFR11209",
           "INFR11213",
           "INFR11219",
-          "INFR11260",
           "INFR11278",
           "INFR11282",
           "INFR11288",
@@ -248,33 +274,33 @@
           "INFR10067",
           "INFR10074",
           "INFR10076",
-          "INFR10077",
           "INFR10079",
           "INFR10080",
           "INFR10086",
           "INFR10090",
-          "INFR11017",
-          "INFR11022",
           "INFR11098",
-          "INFR11134",
           "INFR11144",
           "INFR11150",
+          "INFR11208",
           "INFR11217",
           "INFR11218",
           "INFR11221",
           "INFR11223",
           "INFR11226",
           "INFR11227",
-          "INFR11228",
           "INFR11229",
           "INFR11230",
           "INFR11233",
           "INFR11246",
           "INFR11247",
           "INFR11249",
-          "INFR11255",
           "INFR11256",
           "INFR11289",
+          "INFR11298",
+          "INFR11299",
+          "INFR11301",
+          "INFR11305",
+          "INFR11306",
           "PHIL10133"
         ],
         "notesText": "These are Computer Science courses at level 10 or 11 open to fourth-year undergraduate students.",
@@ -292,28 +318,27 @@
           "INFR11209",
           "INFR11213",
           "INFR11219",
-          "INFR11255",
-          "INFR11260",
           "INFR11278",
           "INFR11282",
           "INFR11288",
-          "INFR11290"
+          "INFR11290",
+          "INFR11298"
         ],
         "notesText": "These are other level 10 or 11 courses open to fourth-year undergraduate students.",
         "parent": "A"
       },
       {
         "id": "A.3",
-        "title": "Level 10 and 11 courses in Schedules A to Q, T and W",
+        "title": "Level 10 and 11 courses in Schedules A to R, T and W",
         "minCredits": 0,
         "maxCredits": 10,
         "courses": [],
-        "schedules": "Level 10 and 11 courses in Schedules A to Q, T and W",
+        "schedules": "Level 10 and 11 courses in Schedules A to R, T and W",
         "notesText": "These are courses in all Schools other than Medicine, Veterinary Studies, or the Centre for Open Learning, and include courses normally taken by fourth-year students. In the case that this DPT option is chosen, you are advised to obtain permission to take the course from the Course Organiser, and have the course choice approved by your student support team.",
         "parent": "A"
       }
     ],
     "notesText": "Before making your course choices make sure you have discussed them with your Student Adviser, or someone in your Student Support Team.",
-    "drpsUrl": "https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-4"
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-4"
   }
 ]

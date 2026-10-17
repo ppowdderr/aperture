@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { parseCreditRule, parseProgramme, programmeYearSchema } from "./scrape-drps";
+import { parseCreditRule, parseProgramme, programmeYearSchema, drpsBase } from "./scrape-drps";
 
 const html = readFileSync(new URL("./fixtures/utcmpsi.html", import.meta.url), "utf8");
 const years = parseProgramme(html, "UTCMPSI");
@@ -15,25 +15,30 @@ describe("parseCreditRule", () => {
 });
 
 describe("parseProgramme(UTCMPSI)", () => {
+  it("session is a parameter", () => {
+    expect(drpsBase()).toBe("https://www.drps.ed.ac.uk/26-27/dpt/");
+    expect(parseProgramme(html, "UTCMPSI", "25-26")[0].drpsUrl).toContain("/25-26/");
+  });
   it("finds four years that validate", () => {
     expect(years.map((y) => y.year)).toEqual([1, 2, 3, 4]);
     for (const y of years) expect(() => programmeYearSchema.parse(y)).not.toThrow();
     expect(years[0].programmeTitle).toBe("Computer Science (BSc Hons)");
-    expect(years[0].drpsUrl).toBe("https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-1");
+    expect(years[0].drpsUrl).toBe("https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-1");
   });
-  it("year 1: compulsory INF1A, INF1B, LA1 and Group A = exactly 60", () => {
+  it("year 1: compulsory CRISP, FoC, LA1 and Group A = exactly 60", () => {
     const y1 = years[0];
-    expect(y1.compulsory).toEqual(["INFR08025", "INFR08029", "MATH08079"]);
+    expect(y1.compulsory).toEqual(["INFR07003", "INFR08035", "MATH08079"]);
     const a = y1.groups.find((g) => g.id === "A")!;
     expect(a.minCredits).toBe(60); expect(a.maxCredits).toBe(60);
-    const cafi = y1.groups.find((g) => g.id === "A.1")!;
-    expect(cafi.parent).toBe("A");
-    expect(cafi.courses).toEqual(["MATH07005"]);
+    expect(a.courses).toContain("MATH07005");
+    const cafi = y1.groups.find((g) => g.courses.includes("MATH07005") && g.parent === "A")!;
+    expect(cafi.id).toMatch(/^A\.\d$/);
     expect(cafi.minCredits).toBe(0); expect(cafi.maxCredits).toBe(20);
     expect(cafi.notesText).toMatch(/Higher Mathematics/);
-    const sched = y1.groups.find((g) => g.id === "A.2")!;
+    const sched = y1.groups.find((g) => g.parent === "A" && g.schedules)!;
     expect(sched.schedules).toMatch(/Level 7 and 8 courses/);
-    expect(sched.minCredits).toBe(40); expect(sched.maxCredits).toBe(60);
+    expect(sched.courses).toEqual([]);
+    expect(sched.minCredits).toBe(0); expect(sched.maxCredits).toBe(60);
   });
   it("year 2: a bare schedule rule of exactly 20 credits", () => {
     const y2 = years[1];

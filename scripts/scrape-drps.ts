@@ -1,7 +1,8 @@
 /**
  * DRPS Degree Programme Table → data/programme-<CODE>.json  (ProgrammeYear[])
  *
- *   npm run scrape:drps -- UTCMPSI
+ *   npm run scrape:drps -- UTCMPSI            # current session (DRPS_SESSION, default 26-27)
+ *   DRPS_SESSION=25-26 npm run scrape:drps -- UTCMPSI
  *
  * A DPT year has "Compulsory courses" plus option "blocks" (Group A, Group B ...). Each block has a
  * credit rule ("Select exactly 60 credits in this group.") and contains one or more sub-rules, each with
@@ -15,7 +16,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { z } from "zod";
 import type { OptionGroup, ProgrammeYear } from "../src/lib/types";
 
-export const DRPS_BASE = "https://www.drps.ed.ac.uk/25-26/dpt/";
+export const DEFAULT_SESSION = "26-27";
+/** DRPS publishes one tree per academic session, e.g. https://www.drps.ed.ac.uk/26-27/dpt/ */
+export const drpsBase = (session: string = DEFAULT_SESSION) => `https://www.drps.ed.ac.uk/${session}/dpt/`;
 
 const optionGroupSchema = z.object({
   id: z.string().min(1),
@@ -64,12 +67,12 @@ function courseCodes($: CheerioAPI, scope: AnyNode): string[] {
   return out;
 }
 
-export function parseProgramme(html: string, programmeCode: string): ProgrammeYear[] {
+export function parseProgramme(html: string, programmeCode: string, session: string = DEFAULT_SESSION): ProgrammeYear[] {
   const $ = load(html);
   const code = programmeCode.toUpperCase();
   const header = clean($("h2.page-header").first().text());
   const programmeTitle = header.replace(/^Degree Programme Table:\s*/i, "").replace(/\s*\([A-Z0-9]+\)\s*$/, "").trim();
-  const drpsUrl = `${DRPS_BASE}${code.toLowerCase()}.htm`;
+  const drpsUrl = `${drpsBase(session)}${code.toLowerCase()}.htm`;
   const years: ProgrammeYear[] = [];
 
   $("h3[id^=dpt-year-]").each((_, h) => {
@@ -117,7 +120,9 @@ export function parseProgramme(html: string, programmeCode: string): ProgrammeYe
         const blockRule = clean(head.clone().children("h3").remove().end().text());
         const { min, max } = parseCreditRule(blockRule);
         const children: OptionGroup[] = [];
-        $(el).find(".dpt-block__contents > .panel").each((ri, rule) => children.push(parseRule(rule, `${id}.${ri + 1}`, id)));
+        $(el).find(".dpt-block__contents > .panel").each((ri, rule) => {
+          children.push(parseRule(rule, `${id}.${ri + 1}`, id));
+        });
         groups.push({
           id, title: title || `Group ${id}`, minCredits: min, maxCredits: max,
           courses: [...new Set(children.flatMap((c) => c.courses))],
@@ -137,15 +142,17 @@ export function parseProgramme(html: string, programmeCode: string): ProgrammeYe
 async function main() {
   const code = (process.argv[2] ?? "").toUpperCase();
   if (!/^[A-Z0-9]+$/.test(code)) { console.error("usage: npm run scrape:drps -- <PROGRAMME_CODE e.g. UTCMPSI>"); process.exit(1); }
-  const url = `${DRPS_BASE}${code.toLowerCase()}.htm`;
+  const session = process.env.DRPS_SESSION ?? DEFAULT_SESSION;
+  if (!/^\d{2}-\d{2}$/.test(session)) throw new Error(`DRPS_SESSION must look like 26-27, got ${session}`);
+  const url = `${drpsBase(session)}${code.toLowerCase()}.htm`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${url} → ${res.status}`);
-  const years = parseProgramme(await res.text(), code);
+  const years = parseProgramme(await res.text(), code, session);
   mkdirSync("data", { recursive: true });
   const out = `data/programme-${code}.json`;
   writeFileSync(out, JSON.stringify(years, null, 2) + "\n");
   const n = new Set(years.flatMap((y) => [...y.compulsory, ...y.groups.flatMap((g) => g.courses)])).size;
-  console.log(`${out}: ${years.length} years, ${n} distinct courses`);
+  console.log(`${out} (${session}): ${years.length} years, ${n} distinct courses`);
 }
 
 if (process.argv[1]?.endsWith("scrape-drps.ts")) main().catch((e) => { console.error(e); process.exit(1); });
