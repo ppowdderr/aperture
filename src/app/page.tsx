@@ -1,7 +1,32 @@
+import { ResultsStandalone } from "@/components/Results";
 import { Shell } from "@/components/Shell";
 import { WeekGridStandalone } from "@/components/WeekGrid";
+import { loadCourses, loadProgramme, loadSlots } from "@/lib/data";
+import { solve } from "@/lib/solver";
+
+const PROGRAMME = "UTCMPSI";
+const YEAR = 3;
+
+/** Static demo input until #19 wires the degree panel and `/api/solve`: a year-3 student with the earlier compulsory courses passed. */
+function demoSolutions() {
+  const years = loadProgramme(PROGRAMME);
+  const courses = loadCourses(PROGRAMME);
+  const slots = loadSlots(PROGRAMME);
+  const programme = years.find((y) => y.year === YEAR)!;
+  const passed = years.filter((y) => y.year < YEAR).flatMap((y) => y.compulsory);
+  const solutions = solve({
+    programme,
+    courses,
+    slots,
+    allYears: years,
+    student: { programmeCode: PROGRAMME, year: YEAR, passed, background: {} },
+    preferences: { blocks: [], maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] },
+  });
+  return { solutions, courses, slots };
+}
 
 export default function Home() {
+  const demo = demoSolutions();
   return (
     <Shell
       degree={
@@ -36,9 +61,7 @@ export default function Home() {
         </WeekGridStandalone>
       }
       results={
-        <Slot ticket={17} name="Results">
-          <p className="text-fg-faint">Up to three valid years that match your week will appear here.</p>
-        </Slot>
+        <ResultsStandalone solutions={demo.solutions} courses={demo.courses} slots={demo.slots} />
       }
       ledger={
         <Slot ticket={18} name="RulesLedger">
