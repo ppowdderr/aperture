@@ -32,7 +32,7 @@ export async function connectDb(): Promise<void> {
     }
     cache.promise = mongoose.connect(uri, {
       bufferCommands: false,
-      dbName: process.env.MONGODB_DB ?? "aperture",
+      dbName: "aperture",
     });
   }
 
