@@ -56,7 +56,7 @@ export function RulesLedger({ rules }: RulesLedgerProps) {
         {rules.length} {rules.length === 1 ? "rule" : "rules"} enforced by this
         solution. Hover a line to read the exact DRPS sentence.
       </p>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-3 @[36rem]:grid-cols-2 @[60rem]:grid-cols-3">
         {kindOrder.map((kind) => {
           const group = rules.filter((rule) => rule.kind === kind);
           if (group.length === 0) return null;

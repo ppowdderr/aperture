@@ -1,20 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Shell } from "@/components/Shell";
 
+// Client-only: the planner seeds state from localStorage, which would mismatch a server render.
 const Home = dynamic(() => import("../home").then((m) => m.Home), {
   ssr: false,
-  loading: () => (
-    <Shell
-      degree={<p className="text-fg-faint">Loading programme…</p>}
-      week={<p className="text-fg-faint">Loading…</p>}
-      results={<p className="text-fg-faint">Up to three valid years that match your week will appear here.</p>}
-      ledger={<p className="text-fg-faint">Every rule a result satisfies, with a link to the DRPS line it came from.</p>}
-    />
-  ),
+  loading: () => <div className="flex h-dvh items-center justify-center bg-bg text-[15px] text-fg-faint">Loading…</div>,
 });
 
-export default function Page() {
+export default function PlanPage() {
   return <Home />;
 }
