@@ -244,7 +244,7 @@ export function WeekGrid({ value, onChange }: WeekGridProps) {
   const hours = Array.from({ length: SPAN / 60 }, (_, i) => DAY_START / 60 + i);
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4" onKeyDown={onRootKeyDown}>
+    <div className="flex min-h-0 flex-1 flex-col gap-4" onKeyDown={onRootKeyDown}>
       <p id={hintId} className="sr-only">
         Drag on the grid to mark time you want kept free. Arrow keys move, Enter marks an hour, Delete removes a block, Enter on a
         block changes its type.
@@ -414,7 +414,7 @@ function Popover({ block: b, onKind, onRemove }: { block: TimeBlock; onKind: (k:
 function Controls({ value, onChange }: WeekGridProps) {
   const set = <K extends keyof Preferences>(k: K, v: Preferences[K]) => onChange({ ...value, [k]: v });
   return (
-    <div className="flex flex-wrap items-end gap-x-6 gap-y-3 text-[13px]">
+    <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 text-[13px]">
       <Num label="Max hours back-to-back" value={value.maxBackToBackHours} min={1} max={10} onChange={(v) => set("maxBackToBackHours", v)} />
       <Num label="Longest gap (hours)" value={value.maxGapHours} min={0} max={9} onChange={(v) => set("maxGapHours", v)} />
       <label className="flex h-8 cursor-pointer items-center gap-2 text-fg">
@@ -455,7 +455,7 @@ function Num({ label, value, min, max, onChange }: { label: string; value: numbe
 export function WeekGridStandalone({ children }: { children?: ReactNode }) {
   const [prefs, setPrefs] = useState<Preferences>(emptyPreferences);
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4">
+    <div className="flex min-h-full flex-col gap-4">
       <WeekGrid value={prefs} onChange={setPrefs} />
       {children}
     </div>

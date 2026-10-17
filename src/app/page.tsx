@@ -15,7 +15,7 @@ export default function Home() {
       }
       week={
         <WeekGridStandalone>
-        <form className="flex flex-col gap-2" action="#">
+        <form className="flex shrink-0 flex-col gap-2" action="#">
           <label htmlFor="wants" className="text-[12px] text-fg-faint">
             What you want, in your own words
           </label>
