@@ -2,7 +2,7 @@ import mongoose, { Schema, type Model, type SchemaDefinition } from "mongoose";
 import type { Course } from "../../types";
 
 const courseDefinition = {
-  code: { type: String, required: true, trim: true, unique: true },
+  code: { type: String, required: true, trim: true },
   title: { type: String, required: true, trim: true },
   credits: { type: Number, required: true, min: 0 },
   level: { type: Number, required: true, min: 7, max: 12 },

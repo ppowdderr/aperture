@@ -30,7 +30,10 @@ export async function connectDb(): Promise<void> {
       console.info("[db] connecting to MongoDB");
       cache.logged = true;
     }
-    cache.promise = mongoose.connect(uri, { bufferCommands: false });
+    cache.promise = mongoose.connect(uri, {
+      bufferCommands: false,
+      dbName: process.env.MONGODB_DB ?? "aperture",
+    });
   }
 
   try {
