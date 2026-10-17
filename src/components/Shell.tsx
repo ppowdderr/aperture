@@ -21,7 +21,7 @@ export function Shell({ degree, week, results, ledger }: ShellProps) {
     <div className="flex h-dvh min-w-[1280px] flex-col bg-bg text-fg">
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-line px-5">
         <div className="flex items-baseline gap-3">
-          <span className="text-[17px] font-semibold tracking-tight">Aperture</span>
+          <a href="/" className="text-[17px] font-semibold tracking-tight hover:text-fg">Aperture</a>
           <span className="hidden text-fg-muted lg:inline">
             Describe the week you want; get back the legal course choices that produce it.
           </span>
