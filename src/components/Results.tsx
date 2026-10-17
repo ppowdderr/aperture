@@ -31,7 +31,7 @@ export function fitLabel(s: Solution): string {
   const { misses, unavoidable } = splitViolations(s.violations);
   const parts: string[] = [];
   if (misses.length) parts.push(`${misses.length} ${misses.length === 1 ? "miss" : "misses"}`);
-  if (unavoidable.length) parts.push(`${unavoidable.length} unavoidable`);
+  if (unavoidable.length) parts.push(misses.length ? `${unavoidable.length} forced` : `${unavoidable.length} forced ${unavoidable.length === 1 ? "miss" : "misses"}`);
   return parts.length ? parts.join(" · ") : "fits";
 }
 
@@ -182,7 +182,7 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
 
         <section aria-label="Misses" className="min-w-0">
           <h3 className="mb-1 text-[13px] text-fg-muted">
-            {misses.length > 0 ? "Where it misses" : unavoidable.length > 0 ? "Nothing you can change misses" : "Fits everything you asked for"}{" "}
+            {misses.length > 0 ? "Where it misses" : unavoidable.length > 0 ? "Only forced misses" : "Fits everything you asked for"}{" "}
             <span className="font-mono text-fg-faint">score {solution.score}</span>
           </h3>
           {misses.length > 0 && (

@@ -82,11 +82,11 @@ describe("Results", () => {
 
   it("never says fits while anything is violated", () => {
     expect(fitLabel(solution({ violations: [] }))).toBe("fits");
-    expect(fitLabel(solution({ violations: ["Unavoidable: INFR08030 lecture S1 Tue 10:10–11:00 falls in time you kept free"] }))).toBe("1 unavoidable");
-    expect(fitLabel(solution({ violations: ["a", "b", "Unavoidable: c"] }))).toBe("2 misses · 1 unavoidable");
+    expect(fitLabel(solution({ violations: ["Unavoidable: INFR08030 lecture S1 Tue 10:10–11:00 falls in time you kept free"] }))).toBe("1 forced miss");
+    expect(fitLabel(solution({ violations: ["a", "b", "Unavoidable: c"] }))).toBe("2 misses · 1 forced");
     setup([solution({ violations: ["Unavoidable: INFR08030 lecture S1 Tue 10:10–11:00 falls in time you kept free"] })]);
-    expect(screen.getAllByRole("tab")[0].textContent).toContain("1 unavoidable");
-    expect(screen.getByText("Nothing you can change misses")).toBeTruthy();
+    expect(screen.getAllByRole("tab")[0].textContent).toContain("1 forced miss");
+    expect(screen.getByText("Only forced misses")).toBeTruthy();
     expect(screen.getByText(/INFR08030 lecture S1 Tue 10:10–11:00/)).toBeTruthy();
   });
 
