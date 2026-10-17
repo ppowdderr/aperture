@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { complete } from "./llm/client";
 import type { Course, Preferences } from "./types";
 
 const courseCode = z.string().regex(/^[A-Z]{4}\d{5}$/);
@@ -13,12 +14,12 @@ export const patchSchema = z
     latestEnd: z.number().int().min(480).max(1080).nullable().optional(),
     maxBackToBackHours: z.number().min(1).max(12).nullable().optional(),
     maxGapHours: z.number().min(0).max(12).nullable().optional(),
-    campusDaysTogether: z.boolean().optional(),
+    campusDaysTogether: z.preprocess((value) => (value === null ? undefined : value), z.boolean().optional()),
     take: z.array(courseCode).max(20).optional(),
     drop: z.array(courseCode).max(20).optional(),
     untake: z.array(courseCode).max(20).optional(),
     keywords: z.array(z.string().max(40)).max(10).optional(),
-    reply: z.string().max(300),
+    reply: z.string().max(300).default("Preferences updated."),
     notes: z.array(z.string().max(120)).max(5).optional(),
   })
   .strict();
@@ -82,33 +83,20 @@ Courses available this year:
 ${list}`;
 }
 
-/** Calls DeepSeek (OpenAI-compatible). Throws on network/API error; returns null when the output isn't a valid patch. */
-export async function parseWithDeepSeek(message: string, system: string, history: readonly Turn[] = [], fetchImpl: typeof fetch = fetch): Promise<Patch | null> {
-  const key = process.env.DEEPSEEK_API_KEY;
-  if (!key) throw new Error("DEEPSEEK_API_KEY is not set");
-  const res = await fetchImpl("https://api.deepseek.com/chat/completions", {
-    method: "POST",
-    headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: "deepseek-chat",
-      temperature: 0,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: system },
-        ...history.slice(-10).map((t) => ({ role: t.role === "you" ? "user" : "assistant", content: t.text })),
-        { role: "user", content: message },
-      ],
-    }),
-  });
-  if (!res.ok) throw new Error(`DeepSeek ${res.status}`);
-  const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-  const text = data.choices?.[0]?.message?.content ?? "";
-  let raw: unknown;
-  try {
-    raw = JSON.parse(text);
-  } catch {
-    return null;
-  }
-  const parsed = patchSchema.safeParse(raw);
-  return parsed.success ? parsed.data : null;
+/** Ask the configured OpenAI-compatible model for one validated preference patch. */
+export async function parseMessage(message: string, system: string, history: readonly Turn[] = []): Promise<Patch> {
+  const conversation = history
+    .slice(-10)
+    .map((turn) => `${turn.role === "you" ? "Student" : "Aperture"}: ${turn.text}`)
+    .join("\n");
+  return complete(
+    [
+      system,
+      conversation ? `Conversation so far:\n${conversation}` : "",
+      `Latest student message:\n${message}`,
+    ]
+      .filter(Boolean)
+      .join("\n\n"),
+    patchSchema,
+  );
 }

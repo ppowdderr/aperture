@@ -47,7 +47,9 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
-  useEffect(() => endRef.current?.scrollIntoView({ block: "end" }), [turns, busy]);
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: "end" });
+  }, [turns, busy]);
   const titles = new Map(courses.map((c) => [c.code, c.title]));
   const list = chips(preferences, titles);
 

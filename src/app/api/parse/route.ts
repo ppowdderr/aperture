@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { loadCourses, loadProgramme } from "@/lib/data";
-import { applyPatch, checkTake, parseWithDeepSeek, systemPrompt } from "@/lib/parse";
+import { applyPatch, checkTake, parseMessage, systemPrompt } from "@/lib/parse";
 import { placeableCourses } from "@/lib/solver/search";
 import { preferencesSchema, studentSchema } from "../solve/route";
 
@@ -30,14 +30,21 @@ export async function POST(req: Request): Promise<NextResponse> {
   const titles = new Map(courses.map((c) => [c.code, c.title]));
   const t0 = performance.now();
   try {
-    const raw = await parseWithDeepSeek(message, systemPrompt(year, inYear, preferences), history);
-    const patch = raw && checkTake(raw, placeable, reasonNot, titles);
-    if (!patch) return NextResponse.json({ error: "I couldn't turn that into settings. Try naming days, times or courses." }, { status: 422 });
+    const patch = checkTake(
+      await parseMessage(message, systemPrompt(year, inYear, preferences), history),
+      placeable,
+      reasonNot,
+      titles,
+    );
     return NextResponse.json(
       { preferences: applyPatch(preferences, patch), reply: patch.reply, notes: patch.notes ?? [] },
       { headers: { "Server-Timing": `parse;dur=${Math.round(performance.now() - t0)}` } },
     );
   } catch (e) {
+    console.error(
+      "[api/parse] failed:",
+      e instanceof Error ? `${e.name}: ${e.message}` : "unknown error",
+    );
     return NextResponse.json({ error: e instanceof Error ? e.message : "Parser unavailable" }, { status: 502 });
   }
 }
