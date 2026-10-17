@@ -1,7 +1,7 @@
 import type { Preferences, ProgrammeYear, Course, Slot, StudentState, Solution } from "../types";
 import { assignGroups } from "./clash";
 import { explainCourses, programmeRules } from "./explain";
-import { score } from "./score";
+import { UNAVOIDABLE, score } from "./score";
 import { searchLegalYears } from "./search";
 
 export interface SolveInput {
@@ -48,17 +48,24 @@ export function solve(input: SolveInput): Solution[] {
     cap: SEARCH_CAP,
   });
   const rules = programmeRules(programme, courses);
+  const compulsory = new Set([...programme.compulsory, ...preferences.pinned]);
 
   const scored: Solution[] = [];
   for (const year of legal) {
     const assignment = assignGroups(year.courses, slots);
     const chosen = year.courses.map((c) => byCode.get(c)!);
-    const s = score(chosen, assignment.groups, slots, preferences);
+    const s = score(chosen, assignment.groups, slots, preferences, compulsory);
+    const clashes = assignment.clashes.map((c) => {
+      const codes = c.match(/[A-Z]{4}\d{5}/g) ?? [];
+      const unavoidable = codes.length > 0 && codes.every((code) => compulsory.has(code));
+      return `${unavoidable ? UNAVOIDABLE : ""}Clash: ${c}`;
+    });
+    const avoidableClashes = clashes.filter((c) => !c.startsWith(UNAVOIDABLE)).length;
     scored.push({
       courses: year.courses,
       groups: assignment.groups,
-      score: s.score + CLASH_PENALTY * assignment.clashes.length,
-      violations: [...assignment.clashes.map((c) => `Clash: ${c}`), ...s.violations],
+      score: s.score + CLASH_PENALTY * avoidableClashes,
+      violations: [...clashes, ...s.violations],
       reasons: explainCourses(year.courses, year.reasons, courses, preferences),
       rulesSatisfied: rules,
     });

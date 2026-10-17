@@ -21,11 +21,14 @@ export function Home() {
 
   useEffect(() => savePreferences(preferences), [preferences]);
 
-  // Default student: year 3 with every earlier year's compulsory courses passed, until the degree panel says otherwise.
-  const defaultPassed = useMemo(
-    () => (data ? data.years.filter((y) => y.year < YEAR).flatMap((y) => y.compulsory).sort() : null),
-    [data],
-  );
+  // Default passed courses per year: every earlier year's compulsory courses. Year 3 is the starting point.
+  const yearDefaults = useMemo(() => {
+    if (!data) return null;
+    const out: Partial<Record<StudentState["year"], string[]>> = {};
+    for (const y of data.years) out[y.year] = data.years.filter((p) => p.year < y.year).flatMap((p) => p.compulsory).sort();
+    return out;
+  }, [data]);
+  const defaultPassed = yearDefaults?.[YEAR] ?? null;
   const student = useMemo<StudentState | null>(
     () => edited ?? (defaultPassed ? { programmeCode: PROGRAMME, year: YEAR, passed: defaultPassed, background: {} } : null),
     [edited, defaultPassed],
@@ -50,7 +53,13 @@ export function Home() {
     <Shell
       degree={
         defaultPassed ? (
-          <DegreePanel initialProgrammeCode={PROGRAMME} initialYear={YEAR} initialPassed={defaultPassed} onChange={setEdited} />
+          <DegreePanel
+            initialProgrammeCode={PROGRAMME}
+            initialYear={YEAR}
+            initialPassed={defaultPassed}
+            yearDefaults={yearDefaults ?? undefined}
+            onChange={setEdited}
+          />
         ) : (
           <p className="text-fg-faint">{dataError ? `Could not load programme data: ${dataError}` : "Loading programme…"}</p>
         )
@@ -100,6 +109,7 @@ export function Home() {
             onPreferencesChange={setPreferences}
             selected={selected}
             onSelect={(index) => setSelection({ of: solve.solutions, index })}
+            emptyMessage={solve.status === "empty" || solve.status === "error" ? caption : undefined}
           />
         ) : (
           <p className="text-fg-faint">Up to three valid years that match your week will appear here.</p>

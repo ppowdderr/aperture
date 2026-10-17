@@ -5,7 +5,7 @@ vi.mock("next/server", () => ({ connection: async () => undefined }));
 
 const { POST } = await import("./route");
 
-const prefs = { blocks: [], maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] };
+const prefs = { blocks: [], earliestStart: null, latestEnd: null, maxBackToBackHours: null, maxGapHours: null, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] };
 const student = { programmeCode: "UTCMPSI", year: 3, passed: ["INFR08026", "INFR08027", "INFR08030", "INFR08031", "INFR08032"], background: {} };
 const post = (body: unknown) =>
   POST(new Request("http://localhost/api/solve", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) }));

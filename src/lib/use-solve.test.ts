@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Preferences, Solution, StudentState } from "./types";
 import { PREFERENCES_KEY, SOLVE_DEBOUNCE_MS, loadPreferences, savePreferences, useSolve } from "./use-solve";
 
-const prefs: Preferences = { blocks: [], maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] };
+const prefs: Preferences = { blocks: [], earliestStart: null, latestEnd: null, maxBackToBackHours: null, maxGapHours: null, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] };
 const student: StudentState = { programmeCode: "UTCMPSI", year: 3, passed: [], background: {} };
 const solution: Solution = { courses: ["INFR09051"], groups: {}, score: 0, violations: [], reasons: [], rulesSatisfied: [] };
 

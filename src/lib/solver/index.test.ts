@@ -6,7 +6,7 @@ import { score } from "./score";
 
 const emptyPrefs: Preferences = {
   blocks: [],
-  maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false,
+  earliestStart: null, latestEnd: null, maxBackToBackHours: null, maxGapHours: null, campusDaysTogether: false,
   wantKeywords: [], pinned: [], excluded: [],
 };
 
@@ -78,7 +78,7 @@ describe("solve", () => {
     expect(out[0].courses).not.toEqual(plain[0].courses);
   });
 
-  it("still answers when the published timetable clashes, ranking the clash below everything else", () => {
+  it("still answers when two compulsory courses clash in the published timetable, marking it unavoidable", () => {
     const y2 = years.find((y) => y.year === 2)!;
     const out = solve({
       ...base,
@@ -87,8 +87,10 @@ describe("solve", () => {
       student: { ...student, year: 2, passed: years.filter((y) => y.year < 2).flatMap((y) => y.compulsory) },
     });
     expect(out.length).toBeGreaterThan(0);
-    expect(out[0].violations[0]).toMatch(/^Clash: /);
-    expect(out[0].score).toBeLessThanOrEqual(CLASH_PENALTY);
+    expect(out[0].violations[0]).toMatch(/^Unavoidable: Clash: INFR08030 .* INFR08032/);
+    expect(out[0].score).toBeGreaterThan(CLASH_PENALTY);
+    const scores = out.map((s) => s.score);
+    expect(scores).toEqual([...scores].sort((a, b) => b - a));
   });
 
   it("respects count", () => {

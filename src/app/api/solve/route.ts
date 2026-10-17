@@ -22,8 +22,10 @@ export const timeBlockSchema = z
 export const preferencesSchema = z
   .object({
     blocks: z.array(timeBlockSchema).max(200),
-    maxBackToBackHours: z.number().min(0).max(12),
-    maxGapHours: z.number().min(0).max(12),
+    earliestStart: z.number().int().min(0).max(24 * 60).nullable(),
+    latestEnd: z.number().int().min(0).max(24 * 60).nullable(),
+    maxBackToBackHours: z.number().min(0).max(12).nullable(),
+    maxGapHours: z.number().min(0).max(12).nullable(),
     campusDaysTogether: z.boolean(),
     wantKeywords: z.array(z.string().max(80)).max(20),
     pinned: z.array(courseCode).max(20),
