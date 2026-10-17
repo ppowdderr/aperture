@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { loadCourses, loadProgramme } from "@/lib/data";
-import { applyPatch, parseWithDeepSeek, systemPrompt } from "@/lib/parse";
-import { preferencesSchema } from "../solve/route";
+import { applyPatch, checkTake, parseWithDeepSeek, systemPrompt } from "@/lib/parse";
+import { placeableCourses } from "@/lib/solver/search";
+import { preferencesSchema, studentSchema } from "../solve/route";
 
 const bodySchema = z
   .object({
@@ -10,6 +11,8 @@ const bodySchema = z
     year: z.number().int().min(1).max(5),
     message: z.string().min(1).max(1000),
     preferences: preferencesSchema,
+    student: studentSchema.optional(),
+    history: z.array(z.object({ role: z.enum(["you", "aperture"]), text: z.string().max(1000) })).max(20).optional(),
   })
   .strict();
 
@@ -17,15 +20,18 @@ const bodySchema = z
 export async function POST(req: Request): Promise<NextResponse> {
   const parsed = bodySchema.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Invalid body", issues: parsed.error.issues }, { status: 400 });
-  const { programmeCode, year, message, preferences } = parsed.data;
+  const { programmeCode, year, message, preferences, history = [] } = parsed.data;
   const [programme, courses] = await Promise.all([loadProgramme(programmeCode), loadCourses(programmeCode)]);
   const py = programme?.find((y) => y.year === year);
   if (!py) return NextResponse.json({ error: "Unknown programme or year" }, { status: 404 });
-  const allowed = new Set([...py.compulsory, ...py.groups.flatMap((g) => g.courses)]);
-  const inYear = courses.filter((c) => allowed.has(c.code) || c.level >= 9);
+  const student = parsed.data.student ?? { programmeCode, year: py.year, passed: [], background: {} };
+  const { placeable, reasonNot } = placeableCourses({ programme: py, courses, student, allYears: programme });
+  const inYear = courses.filter((c) => placeable.has(c.code));
+  const titles = new Map(courses.map((c) => [c.code, c.title]));
   const t0 = performance.now();
   try {
-    const patch = await parseWithDeepSeek(message, systemPrompt(year, inYear, preferences));
+    const raw = await parseWithDeepSeek(message, systemPrompt(year, inYear, preferences), history);
+    const patch = raw && checkTake(raw, placeable, reasonNot, titles);
     if (!patch) return NextResponse.json({ error: "I couldn't turn that into settings. Try naming days, times or courses." }, { status: 422 });
     return NextResponse.json(
       { preferences: applyPatch(preferences, patch), reply: patch.reply, notes: patch.notes ?? [] },

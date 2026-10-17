@@ -50,6 +50,24 @@ export function applyPatch(prefs: Preferences, p: Patch): Preferences {
   };
 }
 
+export interface Turn {
+  role: "you" | "aperture";
+  text: string;
+}
+
+/** Drops `take` codes the solver cannot place and explains each in `notes`, so a chip never appears for a course that can't be added. */
+export function checkTake(patch: Patch, placeable: ReadonlySet<string>, reasonNot: (code: string) => string, titles: Map<string, string>): Patch {
+  const take = patch.take ?? [];
+  const bad = take.filter((c) => !placeable.has(c));
+  if (bad.length === 0) return patch;
+  return {
+    ...patch,
+    take: take.filter((c) => placeable.has(c)),
+    notes: [...(patch.notes ?? []), ...bad.map((c) => `${titles.get(c) ?? c} can't be added: it ${reasonNot(c)}`)],
+    reply: bad.length === take.length && !patch.drop?.length && !patch.addBlocks?.length ? "I couldn't add that." : patch.reply,
+  };
+}
+
 export function systemPrompt(year: number, courses: readonly Course[], prefs: Preferences): string {
   const list = courses.map((c) => `${c.code} | ${c.title} | ${c.credits} cr | S${c.semester === "full" ? "1+2" : c.semester}`).join("\n");
   return `You turn a University of Edinburgh student's message into edits to their timetable preferences. Reply ONLY with one JSON object matching this TypeScript type, no prose outside it:
@@ -57,6 +75,7 @@ export function systemPrompt(year: number, courses: readonly Course[], prefs: Pr
   earliestStart?: minutes|null, latestEnd?: minutes|null, maxBackToBackHours?: number|null, maxGapHours?: number|null, campusDaysTogether?: boolean,
   take?: courseCode[] (must be in every plan), drop?: courseCode[] (never), untake?: courseCode[] (remove a previous take/drop),
   keywords?: string[] (topics they want, used to rank courses), reply: string (<= 2 short sentences, plain, what you set), notes?: string[] (requests you could not express) }
+The conversation so far is included; later messages refine or undo earlier ones ("actually keep Fridays" => remove the Friday block via clearBlocks + re-adding the others). Answer only for the LAST user message.
 Rules: "no 9ams" => earliestStart 600 unless a day is named (then a free block 480-600 that day). "X off"/"free" => free block 480-1080 that day. Day is a 08:00-18:00 grid. Only use course codes from the list below; resolve nicknames (ML => INFR10086). If the message is not about the timetable, return {"reply": "..."} explaining briefly. Year ${year}.
 Current preferences: ${JSON.stringify({ blocks: prefs.blocks, earliestStart: prefs.earliestStart, latestEnd: prefs.latestEnd, maxBackToBackHours: prefs.maxBackToBackHours, maxGapHours: prefs.maxGapHours, pinned: prefs.pinned, excluded: prefs.excluded, keywords: prefs.wantKeywords })}
 Courses available this year:
@@ -64,7 +83,7 @@ ${list}`;
 }
 
 /** Calls DeepSeek (OpenAI-compatible). Throws on network/API error; returns null when the output isn't a valid patch. */
-export async function parseWithDeepSeek(message: string, system: string, fetchImpl: typeof fetch = fetch): Promise<Patch | null> {
+export async function parseWithDeepSeek(message: string, system: string, history: readonly Turn[] = [], fetchImpl: typeof fetch = fetch): Promise<Patch | null> {
   const key = process.env.DEEPSEEK_API_KEY;
   if (!key) throw new Error("DEEPSEEK_API_KEY is not set");
   const res = await fetchImpl("https://api.deepseek.com/chat/completions", {
@@ -76,6 +95,7 @@ export async function parseWithDeepSeek(message: string, system: string, fetchIm
       response_format: { type: "json_object" },
       messages: [
         { role: "system", content: system },
+        ...history.slice(-10).map((t) => ({ role: t.role === "you" ? "user" : "assistant", content: t.text })),
         { role: "user", content: message },
       ],
     }),
