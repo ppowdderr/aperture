@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { z } from "zod";
+import { connectDb } from "@/lib/db";
 import { loadProgramme } from "@/lib/data";
 import { ProgrammeYearModel } from "@/lib/db/models";
 import { programmeYearListSchema } from "@/lib/schemas";
@@ -41,6 +42,7 @@ export async function GET(
 
   let rows: unknown[] = [];
   try {
+    await connectDb();
     rows = await ProgrammeYearModel.find({ programmeCode })
       .select({ _id: 0, __v: 0 })
       .sort({ year: 1 })

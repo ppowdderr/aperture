@@ -2,6 +2,7 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 import { connection } from "next/server";
 import { z } from "zod";
+import { connectDb } from "@/lib/db";
 import { loadProgramme } from "@/lib/data";
 import { ProgrammeYearModel } from "@/lib/db/models";
 
@@ -47,6 +48,7 @@ export async function GET(): Promise<Response> {
 
   let rows: Array<{ programmeCode: string; programmeTitle: string }> = [];
   try {
+    await connectDb();
     rows = await ProgrammeYearModel.find()
       .select({ programmeCode: 1, programmeTitle: 1, _id: 0 })
       .sort({ programmeCode: 1, year: 1 })

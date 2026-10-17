@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { z } from "zod";
+import { connectDb } from "@/lib/db";
 import { loadCourses, loadProgramme } from "@/lib/data";
 import { CourseModel } from "@/lib/db/models";
 import { courseListSchema } from "@/lib/schemas";
@@ -77,6 +78,7 @@ export async function GET(request: Request): Promise<Response> {
 
   let rows: unknown[] = [];
   try {
+    await connectDb();
     rows = await CourseModel.find({
       code: { $in: courseCodes(programme) },
     })
