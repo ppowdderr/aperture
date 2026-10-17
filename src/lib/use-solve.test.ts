@@ -42,6 +42,24 @@ describe("useSolve", () => {
     expect(result.current.status).toBe("ready");
     expect(result.current.solutions).toEqual([solution]);
     expect(result.current.ms).toBe(42);
+    expect(result.current.solvedFor).toMatchObject({ maxGapHours: 1 });
+  });
+
+  it("exposes which preference object produced the current solutions", async () => {
+    fetchMock.mockResolvedValue(jsonResponse([solution]));
+    const { result, rerender } = renderHook(({ p }: { p: Preferences }) => useSolve(student, p), {
+      initialProps: { p: prefs },
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(SOLVE_DEBOUNCE_MS);
+    });
+    await act(async () => {});
+    expect(result.current.solvedFor).toBe(prefs);
+
+    const changed = { ...prefs, maxGapHours: 1 };
+    rerender({ p: changed });
+    expect(result.current.solvedFor).toBe(prefs);
+    expect(result.current.solvedFor).not.toBe(changed);
   });
 
   it("aborts the in-flight request when a new change arrives, so only the latest answer lands", async () => {

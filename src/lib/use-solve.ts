@@ -78,6 +78,8 @@ export interface SolveState {
   error: string | null;
   /** Server-side solve time from the `Server-Timing` header, when present. */
   ms: number | null;
+  /** The preference object that produced the current request/solutions; null before the first request. */
+  solvedFor: Preferences | null;
   /** Skip the debounce and solve now. */
   solveNow: () => void;
 }
@@ -91,6 +93,7 @@ export function useSolve(student: StudentState | null, preferences: Preferences,
   const [status, setStatus] = useState<SolveStatus>("idle");
   const [error, setError] = useState<string | null>(null);
   const [ms, setMs] = useState<number | null>(null);
+  const [solvedFor, setSolvedFor] = useState<Preferences | null>(null);
   const inflight = useRef<AbortController | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const latest = useRef({ student, preferences, count });
@@ -104,6 +107,7 @@ export function useSolve(student: StudentState | null, preferences: Preferences,
     inflight.current?.abort();
     const controller = new AbortController();
     inflight.current = controller;
+    setSolvedFor(preferences);
     setStatus("loading");
     try {
       const res = await fetch("/api/solve", {
@@ -156,5 +160,5 @@ export function useSolve(student: StudentState | null, preferences: Preferences,
     void run();
   }, [run]);
 
-  return { solutions, status, error, ms, solveNow };
+  return { solutions, status, error, ms, solvedFor, solveNow };
 }

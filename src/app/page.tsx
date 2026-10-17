@@ -27,7 +27,7 @@ export default function Landing() {
           <a href="https://github.com/ppowdderr/aperture" target="_blank" rel="noreferrer" className="hover:text-fg">
             GitHub
           </a>
-          <Link href="/plan" className="rounded-md bg-accent px-3 py-1.5 font-medium text-bg hover:brightness-110">
+          <Link href="/chat" className="rounded-md bg-accent px-3 py-1.5 font-medium text-bg hover:brightness-110">
             Start planning
           </Link>
         </nav>
@@ -44,7 +44,7 @@ export default function Landing() {
             paint the week you want; it returns the combinations your degree programme actually allows.
           </p>
           <div className="mt-10 flex items-center gap-4">
-            <Link href="/plan" className="rounded-md bg-accent px-5 py-2.5 text-[16px] font-medium text-bg hover:brightness-110">
+            <Link href="/chat" className="rounded-md bg-accent px-5 py-2.5 text-[16px] font-medium text-bg hover:brightness-110">
               Start planning
             </Link>
             <span className="text-[15px] text-fg-faint">No account. Your profile stays in your browser, or in a file you export.</span>
