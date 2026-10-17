@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fmt } from "./WeekGrid";
 import type { Course, Preferences, StudentState } from "../lib/types";
 
@@ -46,6 +46,8 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
   const [draft, setDraft] = useState("");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
+  const endRef = useRef<HTMLDivElement>(null);
+  useEffect(() => endRef.current?.scrollIntoView({ block: "end" }), [turns, busy]);
   const titles = new Map(courses.map((c) => [c.code, c.title]));
   const list = chips(preferences, titles);
 
@@ -59,7 +61,14 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
       const res = await fetch("/api/parse", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ programmeCode: student.programmeCode, year: student.year, message, preferences }),
+        body: JSON.stringify({
+          programmeCode: student.programmeCode,
+          year: student.year,
+          message,
+          preferences,
+          student,
+          history: turns.slice(-10).map((t) => ({ role: t.role, text: t.text })),
+        }),
       });
       const data = (await res.json()) as { preferences?: Preferences; reply?: string; notes?: string[]; error?: string };
       if (!res.ok || !data.preferences) {
@@ -77,9 +86,9 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
   }
 
   return (
-    <section aria-label="Describe your week" className="flex flex-col gap-3">
+    <section aria-label="Describe your week" className="flex h-full min-h-0 flex-col gap-3">
       {list.length > 0 ? (
-        <ul aria-label="Your constraints" className="flex flex-wrap gap-1.5">
+        <ul aria-label="Your constraints" className="flex max-h-40 shrink-0 flex-wrap gap-1.5 overflow-auto">
           {list.map((c) => (
             <li key={c.key} className="flex items-center gap-1 rounded-md border border-line bg-panel-2 pl-2.5 pr-1 text-[13px] text-fg">
               {c.text}
@@ -97,22 +106,36 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
       ) : (
         <p className="text-[13px] text-fg-faint">No constraints yet — the plans below are just legal years.</p>
       )}
-      {turns.length > 0 && (
-        <ol aria-label="Conversation" className="flex max-h-40 flex-col gap-1.5 overflow-auto text-[14px]">
-          {turns.slice(-6).map((t, i) => (
-            <li key={i} className={t.role === "you" ? "text-fg-muted" : t.tone === "error" ? "text-amber-700" : "text-fg"}>
-              <span className="mr-2 font-mono text-[11px] uppercase tracking-wide text-fg-faint">{t.role}</span>
-              {t.text}
-            </li>
-          ))}
-        </ol>
-      )}
+      <ol aria-label="Conversation" className="flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-auto text-[15px] leading-snug">
+        {turns.length === 0 && (
+          <li className="text-fg-faint">
+            Say what your week should look like — days off, no early starts, courses you want or don&apos;t. Each message updates the chips above
+            and the plans re-solve.
+          </li>
+        )}
+        {turns.map((t, i) => (
+          <li
+            key={i}
+            className={
+              t.role === "you"
+                ? "max-w-[90%] self-end rounded-lg bg-accent-dim px-3 py-2 text-fg"
+                : t.tone === "error"
+                  ? "max-w-[90%] self-start text-amber-700"
+                  : "max-w-[90%] self-start text-fg"
+            }
+          >
+            {t.text}
+          </li>
+        ))}
+        {busy && <li className="self-start text-fg-faint">…</li>}
+        <div ref={endRef} />
+      </ol>
       <form
         onSubmit={(e) => {
           e.preventDefault();
           void send();
         }}
-        className="flex gap-2"
+        className="flex shrink-0 gap-2"
       >
         <input
           value={draft}

@@ -153,6 +153,40 @@ function semesterSplit(c: Course): [number, number] {
  * `pinned`/`excluded` honoured. Depth-first over candidates with credit-feasibility pruning,
  * compulsory first, so the first result is found almost immediately.
  */
+/**
+ * Courses the solver could place for this student in this year, with the reason a code can't be:
+ * compulsory and option-group members not already passed whose hard prerequisites are passed.
+ */
+export function placeableCourses(
+  input: Pick<SearchInput, "programme" | "courses" | "student" | "allYears">,
+): { placeable: Set<string>; reasonNot: (code: string) => string } {
+  const byCode = new Map(input.courses.map((c) => [c.code, c]));
+  const passed = new Set(input.student.passed);
+  const groups = resolveGroups(input.programme, input.courses, input.allYears);
+  const members = new Set<string>(input.programme.compulsory);
+  for (const g of groups) for (const m of g.members) members.add(m);
+  const unknown = new Set<string>();
+  const prereqs = new Map<string, PrereqExpr>();
+  for (const c of input.courses) {
+    const e = parsePrerequisites(c.prerequisitesText);
+    if (e) prereqs.set(c.code, e);
+  }
+  for (const e of prereqs.values()) for (const code of prereqCodes(e)) if (!byCode.has(code)) unknown.add(code);
+  const placeable = new Set<string>();
+  for (const code of members) {
+    if (!byCode.has(code) || passed.has(code)) continue;
+    const e = prereqs.get(code);
+    if (!e || prereqSatisfied(e, passed, unknown)) placeable.add(code);
+  }
+  const reasonNot = (code: string) => {
+    if (!byCode.has(code)) return "isn't in the course catalogue";
+    if (passed.has(code)) return "is already in your passed courses";
+    if (!members.has(code)) return `isn't an option in year ${input.programme.year} of your programme`;
+    return "has a prerequisite you haven't passed";
+  };
+  return { placeable, reasonNot };
+}
+
 export function searchLegalYears(input: SearchInput): LegalYear[] {
   const { programme, student } = input;
   const cap = input.cap ?? 5000;

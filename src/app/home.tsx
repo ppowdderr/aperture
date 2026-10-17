@@ -145,7 +145,14 @@ export function Home() {
         </span>
       </header>
 
-      <main className="grid min-h-0 flex-1 grid-cols-[minmax(0,1fr)_28rem]">
+      <main className="grid min-h-0 flex-1 grid-cols-[24rem_minmax(0,1fr)_24rem]">
+        <section aria-label="Chat" className="flex min-h-0 flex-col border-r border-line px-5 py-5">
+          {data && student ? (
+            <Chat student={student} courses={data.courses} preferences={preferences} onPreferencesChange={setPreferences} />
+          ) : (
+            <p className="text-[15px] text-fg-faint">Loading…</p>
+          )}
+        </section>
         <section aria-label="Your week" className="flex min-h-0 flex-col px-6 pt-5 pb-4">
           <div className="mb-4 flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3">
             <Controls value={preferences} onChange={setPreferences} />
@@ -196,8 +203,7 @@ export function Home() {
           </div>
         </section>
 
-        <aside aria-label="Results" className="flex min-h-0 flex-col gap-6 overflow-auto border-l border-line px-6 py-5">
-          {data && student && <Chat student={student} courses={data.courses} preferences={preferences} onPreferencesChange={setPreferences} />}
+        <aside aria-label="Results" className="flex min-h-0 flex-col gap-6 overflow-auto border-l border-line px-5 py-5">
           {data ? (
             <Results
               solutions={solve.solutions}
