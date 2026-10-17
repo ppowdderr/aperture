@@ -1,4 +1,4 @@
-import type { Course, OptionGroup, ProgrammeYear, Slot, StudentState } from "../types";
+import type { Course, OptionGroup, ProgrammeYear, Rule, Slot, StudentState } from "../types";
 import { slotsOverlap } from "./clash";
 
 /** Boolean prerequisite expression parsed from the "MUST have passed" clause of DRPS prose. */
@@ -25,6 +25,8 @@ export interface SearchInput {
   allYears?: ProgrammeYear[];
   /** Fixed timetable activities; lets the DFS discard clashy sets before they count toward `cap`. */
   slots?: Slot[];
+  /** Rules explicitly accepted by the student after prose extraction. */
+  rules?: Rule[];
   /** Stop after this many legal sets. */
   cap?: number;
 }
@@ -195,6 +197,24 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
   const excluded = new Set(input.excluded ?? []);
   const pinned = new Set(input.pinned ?? []);
   const groups = resolveGroups(programme, input.courses, input.allYears);
+  const rules = input.rules ?? [];
+
+  for (const rule of rules) {
+    if (
+      rule.kind === "mustPassBefore" &&
+      student.year >= rule.year &&
+      !passed.has(rule.course)
+    ) {
+      return [];
+    }
+  }
+  const extraPrerequisites = new Map<string, string[]>();
+  for (const rule of rules) {
+    if (rule.kind !== "prerequisite") continue;
+    const requirements = extraPrerequisites.get(rule.course) ?? [];
+    requirements.push(...rule.requires);
+    extraPrerequisites.set(rule.course, requirements);
+  }
 
   const forced = programme.compulsory.filter((c) => !passed.has(c));
   for (const c of forced) if (!byCode.has(c) || excluded.has(c)) return [];
@@ -214,6 +234,13 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
   for (const g of groups) for (const m of g.members) if (!forcedSet.has(m)) optional.add(m);
   const ok = (code: string) => {
     if (passed.has(code) || excluded.has(code)) return false;
+    if (
+      (extraPrerequisites.get(code) ?? []).some(
+        (requirement) => !passed.has(requirement),
+      )
+    ) {
+      return false;
+    }
     const e = prereqs.get(code);
     return !e || prereqSatisfied(e, passed, unknown);
   };

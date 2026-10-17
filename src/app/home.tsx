@@ -5,11 +5,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Chat } from "@/components/Chat";
 import { DegreePanel } from "@/components/DegreePanel";
 import { Results, tintFor } from "@/components/Results";
+import { RuleConfirm } from "@/components/RuleConfirm";
 import { RulesLedger } from "@/components/RulesLedger";
 import { Controls, WeekGrid, emptyPreferences } from "@/components/WeekGrid";
 import { FORCED_OUTLINE, PlanCells, forcedKeys } from "@/components/WeekView";
 import { chosenSlots } from "@/lib/solver/score";
-import type { Preferences, Solution, StudentState } from "@/lib/types";
+import type { Preferences, Rule, Solution, StudentState } from "@/lib/types";
 import { loadProfile, parseProfile, profileFileName, profileJson, saveProfile } from "@/lib/profile";
 import { loadPreferences, savePreferences, useProgrammeData, useSolve } from "@/lib/use-solve";
 
@@ -98,6 +99,27 @@ export function Home() {
     setEdited(r.student);
     setPanelKey((k) => k + 1);
     setProfileNote(`Loaded ${file.name}`);
+  }
+
+  function confirmRules(rules: Rule[]) {
+    if (!student) return;
+    setEdited((current) => {
+      const base = current ?? student;
+      const merged = [...(base.confirmedRules ?? [])];
+      const identity = (rule: Rule) =>
+        `${rule.kind}:${rule.kind === "creditRange" ? rule.group : rule.course}:${rule.source}`;
+      for (const rule of rules) {
+        if (
+          !merged.some(
+            (existing) => identity(existing) === identity(rule),
+          )
+        ) {
+          merged.push(rule);
+        }
+      }
+      return { ...base, confirmedRules: merged };
+    });
+    setProfileNote(`${rules.length} ${rules.length === 1 ? "rule" : "rules"} confirmed`);
   }
 
   return (
@@ -259,15 +281,24 @@ export function Home() {
               </button>
             </div>
             {sheet === "degree" && student && yearDefaults && (
-              <DegreePanel
-                key={panelKey}
-                initialProgrammeCode={student.programmeCode}
-                initialYear={student.year}
-                initialPassed={student.passed}
-                initialBackground={student.background}
-                yearDefaults={yearDefaults}
-                onChange={setEdited}
-              />
+              <div className="space-y-4">
+                <DegreePanel
+                  key={panelKey}
+                  initialProgrammeCode={student.programmeCode}
+                  initialYear={student.year}
+                  initialPassed={student.passed}
+                  initialBackground={student.background}
+                  yearDefaults={yearDefaults}
+                  onChange={setEdited}
+                />
+                <RuleConfirm
+                  key={`rules-${student.programmeCode}-${student.year}`}
+                  programmeCode={student.programmeCode}
+                  year={student.year}
+                  student={student}
+                  onConfirm={confirmRules}
+                />
+              </div>
             )}
             {sheet === "rules" && <RulesLedger rules={rules} />}
           </div>

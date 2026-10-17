@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ruleSchema } from "./schemas";
 import type { StudentState } from "./types";
 
 export const PROFILE_KEY = "aperture:profile:v1";
@@ -14,6 +15,7 @@ export const profileSchema = z
     year: z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]),
     passed: z.array(courseCode).max(200),
     background: z.record(z.string(), z.string()),
+    confirmedRules: z.array(ruleSchema).max(50).optional(),
   })
   .strict();
 
@@ -26,11 +28,22 @@ export function toProfile(student: StudentState): Profile {
     year: student.year,
     passed: [...student.passed].sort(),
     background: student.background,
+    ...(student.confirmedRules?.length
+      ? { confirmedRules: student.confirmedRules }
+      : {}),
   };
 }
 
 export function fromProfile(profile: Profile): StudentState {
-  return { programmeCode: profile.programmeCode, year: profile.year, passed: profile.passed, background: profile.background };
+  return {
+    programmeCode: profile.programmeCode,
+    year: profile.year,
+    passed: profile.passed,
+    background: profile.background,
+    ...(profile.confirmedRules?.length
+      ? { confirmedRules: profile.confirmedRules }
+      : {}),
+  };
 }
 
 /** Parses exported JSON; returns a readable error instead of throwing. */

@@ -121,6 +121,24 @@ describe("solve", () => {
     }
   });
 
+  it("carries confirmed degree rules into the returned solution", () => {
+    const rule = {
+      kind: "mustPassBefore" as const,
+      course: "INFR08026",
+      year: 2,
+      source: "Confirmed source sentence.",
+      url: "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-2",
+    };
+    const out = solve({
+      ...base,
+      student: { ...student, confirmedRules: [rule] },
+      preferences: emptyPrefs,
+    });
+
+    expect(out.length).toBeGreaterThan(0);
+    expect(out[0].rulesSatisfied).toContainEqual(rule);
+  });
+
   it("ranks years by how well they fit a painted free block", () => {
     const thursday: Preferences = { ...emptyPrefs, blocks: [{ id: "t", day: 3, start: 8 * 60, end: 18 * 60, kind: "free" }] };
     const out = solve({ ...base, preferences: thursday });

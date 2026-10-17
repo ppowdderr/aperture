@@ -66,4 +66,31 @@ describe("POST /api/solve", () => {
     expect(res.status).toBe(422);
     expect(await res.json()).toMatchObject({ solutions: [] });
   });
+
+  it("returns confirmed rules and validates their shape", async () => {
+    const rule = {
+      kind: "mustPassBefore",
+      course: "INFR08026",
+      year: 2,
+      source: "Confirmed source sentence.",
+      url: "https://www.drps.ed.ac.uk/26-27/dpt/utcmpsi.htm#dpt-year-2",
+    };
+    const res = await post({
+      programmeCode: "UTCMPSI",
+      year: 3,
+      student: { ...student, confirmedRules: [rule] },
+      preferences: prefs,
+    });
+    expect(res.status).toBe(200);
+    const solutions = (await res.json()) as Solution[];
+    expect(solutions[0].rulesSatisfied).toContainEqual(rule);
+
+    const invalid = await post({
+      programmeCode: "UTCMPSI",
+      year: 3,
+      student: { ...student, confirmedRules: [{ ...rule, kind: "unknown" }] },
+      preferences: prefs,
+    });
+    expect(invalid.status).toBe(400);
+  });
 });

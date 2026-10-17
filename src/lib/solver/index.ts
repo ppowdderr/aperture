@@ -44,11 +44,15 @@ export function solve(input: SolveInput): Solution[] {
     student,
     allYears: input.allYears,
     slots,
+    rules: student.confirmedRules,
     pinned: preferences.pinned,
     excluded: preferences.excluded,
     cap: SEARCH_CAP,
   });
-  const rules = programmeRules(programme, courses);
+  const rules = [
+    ...programmeRules(programme, courses),
+    ...(student.confirmedRules ?? []),
+  ];
   const compulsory = new Set([...programme.compulsory, ...preferences.pinned]);
 
   const scored: Solution[] = [];
