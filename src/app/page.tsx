@@ -33,23 +33,23 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <form className="flex gap-2" action="#">
-              <label htmlFor="describe" className="sr-only">
-                Describe your week
+            <form className="flex flex-col gap-2" action="#">
+              <label htmlFor="wants" className="text-[12px] text-fg-faint">
+                What you want, in your own words
               </label>
-              <input
-                id="describe"
-                type="text"
+              <textarea
+                id="wants"
+                rows={3}
                 disabled
-                placeholder="no 9ams, Fridays off, keep KB days together…"
-                className="h-9 flex-1 rounded border border-line bg-panel-2 px-3 placeholder:text-fg-faint disabled:opacity-70"
+                placeholder="No 9ams on Monday or Tuesday, Friday off, something with machine learning or databases, keep King's Buildings days together, no gaps longer than two hours."
+                className="min-h-[4.5rem] max-h-40 w-full resize-y rounded-md border border-line bg-panel-2 px-3 py-2 placeholder:text-fg-faint disabled:opacity-70 field-sizing-content"
               />
-              <button
-                type="button"
-                className="h-9 rounded bg-accent px-4 font-medium text-bg hover:brightness-110"
-              >
-                Solve
-              </button>
+              <div className="flex items-center justify-between">
+                <span className="text-[12px] text-fg-faint">The grid above is what the solver uses; the text fills it in.</span>
+                <button type="button" className="h-9 rounded-md bg-accent px-4 font-medium text-bg hover:brightness-110">
+                  Solve
+                </button>
+              </div>
             </form>
           </div>
         </Slot>
