@@ -89,7 +89,7 @@ describe("solve", () => {
       [
         ["INFR09032", "INFR09051", "INFR10022", "INFR10052", "INFR10065", "INFR10067", "INFR10074"],
         ["INFR09032", "INFR09051", "INFR10022", "INFR10052", "INFR10067", "INFR10076", "INFR10079"],
-        ["INFR09032", "INFR09051", "INFR10022", "INFR10057", "INFR10065", "INFR10067", "INFR10076"],
+        ["INFR09032", "INFR09051", "INFR10022", "INFR10052", "INFR10067", "INFR10078", "INFR10086"],
       ],
     ];
 
@@ -145,6 +145,12 @@ describe("solve", () => {
     expect(out[0].score).toBeGreaterThan(CLASH_PENALTY);
     const scores = out.map((s) => s.score);
     expect(scores).toEqual([...scores].sort((a, b) => b - a));
+  });
+
+  it("lets a course that sits in two sibling groups be taken under either (ML + Mobile Robotics, both A.2/A.3)", () => {
+    const out = solve({ ...base, preferences: { ...emptyPrefs, pinned: ["INFR10086", "INFR10090"] } });
+    expect(out.length).toBeGreaterThan(0);
+    for (const s of out) expect(s.courses).toEqual(expect.arrayContaining(["INFR10086", "INFR10090"]));
   });
 
   it("respects count", () => {

@@ -222,6 +222,12 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
   for (const c of pinned) if (!forcedSet.has(c) && !candidates.includes(c)) return [];
 
   const groupOf = (code: string) => groups.filter((g) => g.members.has(code));
+  // A course's credits count toward every group that merely contains a sub-group it is in (ancestors),
+  // but toward exactly ONE of the most specific groups that list it (leaves) — a course in both A.2 and
+  // A.3 is taken under one of them, so the DFS branches over that choice.
+  const isAncestor = (g: Resolved) => groups.some((h) => h !== g && h.group.parent === g.group.id && [...h.members].some((m) => g.members.has(m)));
+  const leavesOf = (code: string) => groupOf(code).filter((g) => !isAncestor(g)).map((g) => groups.indexOf(g));
+  const ancestorsOf = (code: string) => groupOf(code).filter(isAncestor).map((g) => groups.indexOf(g));
   const groupCredit = groups.map(() => 0);
   const groupRemaining = groups.map((g) =>
     [...g.members].filter((m) => forcedSet.has(m) || candidates.includes(m)).reduce((s, m) => s + byCode.get(m)!.credits, 0),
@@ -239,12 +245,13 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
   let sem: [number, number] = [0, 0];
   const results: LegalYear[] = [];
 
-  const add = (code: string, sign: 1 | -1) => {
+  const add = (code: string, sign: 1 | -1, leaf: number | null) => {
     const c = byCode.get(code)!;
     credits += sign * c.credits;
     const [a, b] = semesterSplit(c);
     sem = [sem[0] + sign * a, sem[1] + sign * b];
-    for (const g of groupOf(code)) groupCredit[groups.indexOf(g)] += sign * c.credits;
+    for (const g of ancestorsOf(code)) groupCredit[g] += sign * c.credits;
+    if (leaf !== null) groupCredit[leaf] += sign * c.credits;
   };
 
   const reasonsFor = (set: string[]) =>
@@ -293,22 +300,30 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
     if (i === candidates.length) {
       if (complete()) {
         const set = [...chosen].sort(sortCodes);
-        results.push({ courses: set, credits, semesterCredits: [sem[0], sem[1]], reasons: reasonsFor(set) });
+        const key = set.join(" ");
+        if (!seen.has(key)) {
+          seen.add(key);
+          results.push({ courses: set, credits, semesterCredits: [sem[0], sem[1]], reasons: reasonsFor(set) });
+        }
       }
       return;
     }
     const code = candidates[i];
     const gs = groupOf(code).map((g) => groups.indexOf(g));
     const c = byCode.get(code)!.credits;
-    // take
+    // take, under each of the most specific groups that list it
     if (!introducesAvoidableFixedClash(code)) {
-      chosen.push(code);
-      add(code, 1);
-      for (const g of gs) groupRemaining[g] -= c;
-      dfs(i + 1);
-      for (const g of gs) groupRemaining[g] += c;
-      add(code, -1);
-      chosen.pop();
+      const leaves = leavesOf(code);
+      for (const leaf of leaves.length ? leaves : [null]) {
+        chosen.push(code);
+        add(code, 1, leaf);
+        for (const g of gs) groupRemaining[g] -= c;
+        dfs(i + 1);
+        for (const g of gs) groupRemaining[g] += c;
+        add(code, -1, leaf);
+        chosen.pop();
+        if (results.length >= cap) break;
+      }
     }
     // skip (not allowed for pinned)
     if (pinned.has(code)) return;
@@ -317,9 +332,10 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
     for (const g of gs) groupRemaining[g] += c;
   };
 
+  const seen = new Set<string>();
   for (const code of forced) {
     chosen.push(code);
-    add(code, 1);
+    add(code, 1, leavesOf(code)[0] ?? null);
   }
   dfs(0);
   return results;
