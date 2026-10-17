@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { courseListSchema, programmeYearListSchema, slotListSchema } from "./schemas";
 import type { Course, Preferences, ProgrammeYear, Slot, Solution, StudentState } from "./types";
 
-export const PREFERENCES_KEY = "aperture:preferences:v1";
+export const PREFERENCES_KEY = "aperture:preferences:v2";
 export const SOLVE_DEBOUNCE_MS = 300;
 
 /** Reads saved preferences; anything malformed falls back to `fallback`. */
@@ -14,7 +14,11 @@ export function loadPreferences(fallback: Preferences, storage: Storage | undefi
     if (!raw) return fallback;
     const p = JSON.parse(raw) as Partial<Preferences>;
     if (!Array.isArray(p.blocks) || !Array.isArray(p.pinned) || !Array.isArray(p.excluded)) return fallback;
-    return { ...fallback, ...p };
+    const merged = { ...fallback, ...p };
+    for (const k of ["earliestStart", "latestEnd", "maxBackToBackHours", "maxGapHours"] as const) {
+      if (merged[k] !== null && typeof merged[k] !== "number") return fallback;
+    }
+    return merged;
   } catch {
     return fallback;
   }

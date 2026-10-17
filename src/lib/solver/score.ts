@@ -21,8 +21,9 @@ export const WEIGHTS = {
   keyword: 15,
 } as const;
 
-const EARLY = 10 * 60;
-const LATE = 17 * 60;
+/** Prefix on violations no course choice can remove (caused only by fixed slots of compulsory courses). */
+export const UNAVOIDABLE = "Unavoidable: ";
+
 const DAY = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
 /** Hours to one decimal, without a trailing .0: 4 → "4", 4.1666 → "4.2". */
@@ -59,6 +60,9 @@ function overlapMinutes(aStart: number, aEnd: number, bStart: number, bEnd: numb
 
 /**
  * Soft score of a legal course set with its tutorial groups against the student's preferences.
+ * Unpainted time is neutral; only painted blocks and controls the student set can produce misses.
+ * Misses caused solely by fixed slots of `compulsory` courses are reported with the `UNAVOIDABLE`
+ * prefix and not scored, so every plan of a year is judged on what the student can change.
  * Deterministic: output depends only on the arguments; violations are sorted.
  */
 export function score(
@@ -66,11 +70,21 @@ export function score(
   groups: Record<string, string>,
   slots: readonly Slot[],
   prefs: Preferences,
+  compulsory: ReadonlySet<string> = new Set(),
 ): ScoreResult {
   const byCode = new Map(courses.map((c) => [c.code, c]));
   const attended = chosenSlots(byCode.keys(), groups, slots);
   let total = 0;
   const violations: string[] = [];
+  const fixed = (s: Slot) => s.group === undefined && compulsory.has(s.course);
+  const miss = (points: number, text: string, ...involved: Slot[]) => {
+    if (involved.length > 0 && involved.every(fixed)) {
+      violations.push(UNAVOIDABLE + text);
+      return;
+    }
+    total += points;
+    violations.push(text);
+  };
 
   // Painted blocks: hard "free" is a heavy penalty, avoid/prefer are soft. Blocks apply to both semesters.
   for (const slot of attended) {
@@ -79,11 +93,9 @@ export function score(
       const hours = overlapMinutes(slot.start, slot.end, block.start, block.end) / 60;
       if (hours === 0) continue;
       if (block.kind === "free") {
-        total += WEIGHTS.freeHour * hours;
-        violations.push(`${label(byCode.get(slot.course), slot)} ${when(slot)} falls in time you kept free`);
+        miss(WEIGHTS.freeHour * hours, `${label(byCode.get(slot.course), slot)} ${when(slot)} falls in time you kept free`, slot);
       } else if (block.kind === "avoid") {
-        total += WEIGHTS.avoidHour * hours;
-        violations.push(`${label(byCode.get(slot.course), slot)} ${when(slot)} falls in time you'd rather avoid`);
+        miss(WEIGHTS.avoidHour * hours, `${label(byCode.get(slot.course), slot)} ${when(slot)} falls in time you'd rather avoid`, slot);
       } else {
         total += WEIGHTS.preferHour * hours;
       }
@@ -100,23 +112,23 @@ export function score(
     daySlots.sort((a, b) => a.start - b.start || a.end - b.end);
     const first = daySlots[0];
     const last = daySlots.reduce((m, s) => (s.end > m.end ? s : m), daySlots[0]);
-    if (first.start < EARLY) {
-      total += WEIGHTS.earlyStart;
-      violations.push(`${label(byCode.get(first.course), first)} ${when(first)} starts before 10:00`);
+    if (prefs.earliestStart !== null && first.start < prefs.earliestStart) {
+      miss(WEIGHTS.earlyStart, `${label(byCode.get(first.course), first)} ${when(first)} starts before ${fmtTime(prefs.earliestStart)}`, first);
     }
-    if (last.end > LATE) {
-      total += WEIGHTS.lateFinish;
-      violations.push(`${label(byCode.get(last.course), last)} ${when(last)} finishes after 17:00`);
+    if (prefs.latestEnd !== null && last.end > prefs.latestEnd) {
+      miss(WEIGHTS.lateFinish, `${label(byCode.get(last.course), last)} ${when(last)} finishes after ${fmtTime(prefs.latestEnd)}`, last);
     }
 
     let runStart = first.start;
     let runEnd = first.end;
+    let run: Slot[] = [first];
     const closeRun = (endSlot: Slot) => {
       const hours = (runEnd - runStart) / 60;
-      if (hours > prefs.maxBackToBackHours) {
-        total += WEIGHTS.longRun;
-        violations.push(
+      if (prefs.maxBackToBackHours !== null && hours > prefs.maxBackToBackHours) {
+        miss(
+          WEIGHTS.longRun,
           `${fmtHours(hours)} h back-to-back ending with ${label(byCode.get(endSlot.course), endSlot)} ${when(endSlot)}`,
+          ...run,
         );
       }
     };
@@ -124,15 +136,16 @@ export function score(
     for (const slot of daySlots.slice(1)) {
       if (slot.start > runEnd) {
         const gap = (slot.start - runEnd) / 60;
-        if (gap > prefs.maxGapHours) {
-          total += WEIGHTS.longGap;
-          violations.push(`${fmtHours(gap)} h gap before ${label(byCode.get(slot.course), slot)} ${when(slot)}`);
+        if (prefs.maxGapHours !== null && gap > prefs.maxGapHours) {
+          miss(WEIGHTS.longGap, `${fmtHours(gap)} h gap before ${label(byCode.get(slot.course), slot)} ${when(slot)}`, prev, slot);
         }
         closeRun(prev);
         runStart = slot.start;
         runEnd = slot.end;
+        run = [slot];
       } else {
         runEnd = Math.max(runEnd, slot.end);
+        run.push(slot);
       }
       prev = slot;
     }
@@ -141,12 +154,11 @@ export function score(
     if (prefs.campusDaysTogether) {
       const campuses = new Set(daySlots.map((s) => s.campus).filter((c) => c !== "other"));
       if (campuses.size > 1) {
-        total += WEIGHTS.campusSwitch;
-        violations.push(
-          `S${first.semester} ${DAY[first.day]} mixes campuses: ${daySlots
-            .filter((s) => s.campus !== "other")
-            .map((s) => `${s.course} ${fmtTime(s.start)} (${s.campus})`)
-            .join(", ")}`,
+        const onCampus = daySlots.filter((s) => s.campus !== "other");
+        miss(
+          WEIGHTS.campusSwitch,
+          `S${first.semester} ${DAY[first.day]} mixes campuses: ${onCampus.map((s) => `${s.course} ${fmtTime(s.start)} (${s.campus})`).join(", ")}`,
+          ...onCampus,
         );
       }
     }

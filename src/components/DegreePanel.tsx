@@ -21,6 +21,8 @@ export interface DegreePanelProps {
   initialYear?: ProgrammeYear["year"];
   initialPassed?: string[];
   initialBackground?: Record<string, string>;
+  /** Passed courses to pre-tick per year (typically every earlier year's compulsory courses); applied when the year changes. */
+  yearDefaults?: Partial<Record<ProgrammeYear["year"], string[]>>;
   onChange?: (student: StudentState) => void;
 }
 
@@ -33,6 +35,7 @@ export function DegreePanel({
   initialYear = 3,
   initialPassed = [],
   initialBackground = {},
+  yearDefaults,
   onChange,
 }: DegreePanelProps) {
   const searchId = useId();
@@ -160,6 +163,13 @@ export function DegreePanel({
 
   function changeYear(nextYear: ProgrammeYear["year"]): void {
     setYear(nextYear);
+    const defaults = yearDefaults?.[nextYear];
+    if (defaults) {
+      const next = new Set(defaults);
+      setPassed(next);
+      emit({ year: nextYear, passed: [...next].sort() });
+      return;
+    }
     emit({ year: nextYear });
   }
 

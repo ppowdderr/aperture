@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Course, Preferences, Slot } from "../types";
-import { WEIGHTS, chosenSlots, fmtHours, fmtTime, score } from "./score";
+import { UNAVOIDABLE, WEIGHTS, chosenSlots, fmtHours, fmtTime, score } from "./score";
 
 function course(code: string, title: string): Course {
   return { code, title, credits: 20, level: 10, semester: 1, school: "Informatics", prerequisitesText: "", drpsUrl: "" };
@@ -9,14 +9,28 @@ function slot(course: string, day: Slot["day"], start: number, end: number, extr
   return { course, activity: "Lecture", semester: 1, day, start, end, weeks: [1, 2, 3], room: "AT 2.12", campus: "central", ...extra };
 }
 const prefs = (p: Partial<Preferences> = {}): Preferences => ({
-  blocks: [], maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [], ...p,
+  blocks: [], earliestStart: null, latestEnd: null, maxBackToBackHours: null, maxGapHours: null, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [], ...p,
 });
 const SEC = course("INFR10067", "Computer Security");
 const CT = course("INFR10065", "Compiling Techniques");
 
 describe("score", () => {
-  it("is 0 with no preferences and a civilised day", () => {
+  it("is 0 with no preferences, whatever the day looks like", () => {
     expect(score([SEC], {}, [slot("INFR10067", 0, 600, 650)], prefs())).toEqual({ score: 0, violations: [] });
+    const brutal = [slot("INFR10067", 0, 480, 600), slot("INFR10065", 0, 900, 1080, { campus: "kb" })];
+    expect(score([SEC, CT], {}, brutal, prefs())).toEqual({ score: 0, violations: [] });
+  });
+
+  it("reports misses caused only by fixed compulsory slots as unavoidable and leaves them unscored", () => {
+    const lecture = [slot("INFR10067", 0, 600, 660)];
+    const p = prefs({ blocks: [{ id: "b", day: 0, start: 540, end: 720, kind: "free" }], earliestStart: 660 });
+    const r = score([SEC], {}, lecture, p, new Set(["INFR10067"]));
+    expect(r.score).toBe(0);
+    expect(r.violations.every((v) => v.startsWith(UNAVOIDABLE))).toBe(true);
+    expect(r.violations).toHaveLength(2);
+    // a tutorial group is a choice, so the same miss on a compulsory course's tutorial still counts
+    const tut = [slot("INFR10067", 0, 600, 660, { activity: "Tutorial", group: "n01" })];
+    expect(score([SEC], { "INFR10067:Tutorial": "n01" }, tut, p, new Set(["INFR10067"])).score).toBe(WEIGHTS.freeHour + WEIGHTS.earlyStart);
   });
 
   it("penalises a lecture in a free block far more than in an avoid block, and rewards prefer", () => {
@@ -41,8 +55,8 @@ describe("score", () => {
     expect(other.score).toBe(0);
   });
 
-  it("flags early starts and late finishes per semester-day", () => {
-    const r = score([SEC, CT], {}, [slot("INFR10067", 0, 540, 590), slot("INFR10065", 0, 1020, 1070)], prefs({ maxGapHours: 8 }));
+  it("flags early starts and late finishes per semester-day when asked", () => {
+    const r = score([SEC, CT], {}, [slot("INFR10067", 0, 540, 590), slot("INFR10065", 0, 1020, 1070)], prefs({ earliestStart: 600, latestEnd: 1020 }));
     expect(r.score).toBe(WEIGHTS.earlyStart + WEIGHTS.lateFinish);
     expect(r.violations).toEqual([
       "INFR10065 Compiling Techniques lecture S1 Mon 17:00–17:50 finishes after 17:00",
@@ -87,12 +101,12 @@ describe("score", () => {
     ];
     expect(chosenSlots(["INFR10067"], { "INFR10067:Tutorial": "n02" }, slots).map((s) => s.start)).toEqual([600, 660]);
     expect(score([SEC], { "INFR10067:Tutorial": "n02" }, slots, prefs()).score).toBe(0);
-    expect(score([SEC], { "INFR10067:Tutorial": "n01" }, slots, prefs()).score).toBe(WEIGHTS.earlyStart);
+    expect(score([SEC], { "INFR10067:Tutorial": "n01" }, slots, prefs({ earliestStart: 600 })).score).toBe(WEIGHTS.earlyStart);
   });
 
   it("is deterministic regardless of slot order", () => {
     const slots = [slot("INFR10067", 0, 540, 600), slot("INFR10065", 0, 840, 900), slot("INFR10065", 4, 1020, 1080)];
-    const p = prefs({ blocks: [{ id: "b", day: 4, start: 960, end: 1080, kind: "free" }], campusDaysTogether: true });
+    const p = prefs({ blocks: [{ id: "b", day: 4, start: 960, end: 1080, kind: "free" }], campusDaysTogether: true, earliestStart: 600, latestEnd: 1020, maxGapHours: 3 });
     const a = score([SEC, CT], {}, slots, p);
     const b = score([CT, SEC], {}, [...slots].reverse(), p);
     expect(a).toEqual(b);

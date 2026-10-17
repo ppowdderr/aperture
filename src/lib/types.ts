@@ -62,10 +62,13 @@ export interface TimeBlock {
   kind: BlockKind;
 }
 
+/** Everything here is opt-in: null / empty means "no preference", so an untouched week scores 0 misses. */
 export interface Preferences {
   blocks: TimeBlock[];
-  maxBackToBackHours: number;
-  maxGapHours: number;
+  earliestStart: number | null;     // minutes; e.g. 600 = no classes before 10:00
+  latestEnd: number | null;         // minutes; e.g. 1020 = done by 17:00
+  maxBackToBackHours: number | null;
+  maxGapHours: number | null;
   campusDaysTogether: boolean;
   wantKeywords: string[];     // "databases", "machine learning"
   pinned: string[];           // course codes that must be included

@@ -18,7 +18,17 @@ const KIND_LABEL: Record<BlockKind, string> = { free: "Free", avoid: "Avoid", pr
 type Day = TimeBlock["day"];
 
 export function emptyPreferences(): Preferences {
-  return { blocks: [], maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false, wantKeywords: [], pinned: [], excluded: [] };
+  return {
+    blocks: [],
+    earliestStart: null,
+    latestEnd: null,
+    maxBackToBackHours: null,
+    maxGapHours: null,
+    campusDaysTogether: false,
+    wantKeywords: [],
+    pinned: [],
+    excluded: [],
+  };
 }
 
 let seq = 0;
@@ -415,6 +425,8 @@ function Controls({ value, onChange }: WeekGridProps) {
   const set = <K extends keyof Preferences>(k: K, v: Preferences[K]) => onChange({ ...value, [k]: v });
   return (
     <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 text-[13px]">
+      <Hour label="No classes before" value={value.earliestStart} onChange={(v) => set("earliestStart", v)} />
+      <Hour label="Done by" value={value.latestEnd} onChange={(v) => set("latestEnd", v)} />
       <Num label="Max hours back-to-back" value={value.maxBackToBackHours} min={1} max={10} onChange={(v) => set("maxBackToBackHours", v)} />
       <Num label="Longest gap (hours)" value={value.maxGapHours} min={0} max={9} onChange={(v) => set("maxGapHours", v)} />
       <label className="flex h-8 cursor-pointer items-center gap-2 text-fg">
@@ -430,7 +442,8 @@ function Controls({ value, onChange }: WeekGridProps) {
   );
 }
 
-function Num({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (v: number) => void }) {
+/** Optional number; empty means "no preference". */
+function Num({ label, value, min, max, onChange }: { label: string; value: number | null; min: number; max: number; onChange: (v: number | null) => void }) {
   const id = useId();
   return (
     <div className="flex flex-col gap-1">
@@ -443,10 +456,37 @@ function Num({ label, value, min, max, onChange }: { label: string; value: numbe
         inputMode="numeric"
         min={min}
         max={max}
-        value={value}
-        onChange={(e) => onChange(clamp(Number(e.target.value), min, max))}
-        className="h-8 w-20 rounded-md border border-line bg-panel-2 px-2 font-mono text-fg tabular-nums"
+        placeholder="any"
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value === "" ? null : clamp(Number(e.target.value), min, max))}
+        className="h-8 w-20 rounded-md border border-line bg-panel-2 px-2 font-mono text-fg tabular-nums placeholder:font-sans placeholder:text-fg-faint"
       />
+    </div>
+  );
+}
+
+/** Optional hour of day; "any" means no preference. */
+function Hour({ label, value, onChange }: { label: string; value: number | null; onChange: (v: number | null) => void }) {
+  const id = useId();
+  const hours = Array.from({ length: (DAY_END - DAY_START) / 60 + 1 }, (_, i) => DAY_START + i * 60);
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-[12px] text-fg-faint">
+        {label}
+      </label>
+      <select
+        id={id}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
+        className="h-8 rounded-md border border-line bg-panel-2 px-2 text-fg"
+      >
+        <option value="">any</option>
+        {hours.map((h) => (
+          <option key={h} value={h}>
+            {fmt(h)}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

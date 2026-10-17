@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { chosenSlots } from "../lib/solver/score";
+import { UNAVOIDABLE, chosenSlots } from "../lib/solver/score";
 import type { Course, Preferences, Slot, Solution } from "../lib/types";
 import { emptyPreferences } from "./WeekGrid";
 import { COURSE_TINTS, WeekView } from "./WeekView";
@@ -15,7 +15,18 @@ export interface ResultsProps {
   /** Controlled plan index; omit to let Results keep its own. */
   selected?: number;
   onSelect?: (index: number) => void;
+  /** Shown instead of the default placeholder when there are no solutions (e.g. the solver's 422 message). */
+  emptyMessage?: string;
 }
+
+export function splitViolations(violations: readonly string[]): { misses: string[]; unavoidable: string[] } {
+  return {
+    misses: violations.filter((v) => !v.startsWith(UNAVOIDABLE)),
+    unavoidable: violations.filter((v) => v.startsWith(UNAVOIDABLE)).map((v) => v.slice(UNAVOIDABLE.length)),
+  };
+}
+
+const missCount = (s: Solution) => splitViolations(s.violations).misses.length;
 
 const SEM_LABEL = { 1: "S1", 2: "S2", full: "S1+2" } as const;
 
@@ -37,7 +48,7 @@ export function togglePreference(prefs: Preferences, code: string, list: "pinned
   };
 }
 
-export function Results({ solutions, courses, slots, preferences, onPreferencesChange, selected, onSelect }: ResultsProps) {
+export function Results({ solutions, courses, slots, preferences, onPreferencesChange, selected, onSelect, emptyMessage }: ResultsProps) {
   const [internal, setInternal] = useState(0);
   const index = Math.min(selected ?? internal, Math.max(0, solutions.length - 1));
   const select = (i: number) => {
@@ -48,8 +59,9 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
   const byCode = new Map(courses.map((c) => [c.code, c]));
 
   if (!solution) {
-    return <p className="text-fg-faint">Up to three valid years that match your week will appear here.</p>;
+    return <p className="text-fg-faint">{emptyMessage ?? "Up to three valid years that match your week will appear here."}</p>;
   }
+  const { misses, unavoidable } = splitViolations(solution.violations);
 
   const attended = chosenSlots(solution.courses, solution.groups, slots);
   const tintOf = (code: string) => COURSE_TINTS[Math.max(0, solution.courses.indexOf(code)) % COURSE_TINTS.length];
@@ -76,7 +88,7 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
           >
             Plan {i + 1}
             <span className="ml-2 font-mono text-[11px] text-fg-faint">
-              {s.violations.length === 0 ? "fits" : `${s.violations.length} ${s.violations.length === 1 ? "miss" : "misses"}`}
+              {missCount(s) === 0 ? "fits" : `${missCount(s)} ${missCount(s) === 1 ? "miss" : "misses"}`}
             </span>
           </button>
         ))}
@@ -139,17 +151,31 @@ export function Results({ solutions, courses, slots, preferences, onPreferencesC
 
         <section aria-label="Misses" className="min-w-0">
           <h3 className="mb-1 text-[12px] text-fg-muted">
-            {solution.violations.length === 0 ? "Fits everything you asked for" : "Where it misses"}{" "}
+            {misses.length === 0 ? "Fits everything you asked for" : "Where it misses"}{" "}
             <span className="font-mono text-fg-faint">score {solution.score}</span>
           </h3>
-          {solution.violations.length > 0 && (
+          {misses.length > 0 && (
             <ul className="max-h-40 divide-y divide-line overflow-auto rounded-md border border-line bg-panel-2 text-[12px] text-fg-muted">
-              {solution.violations.map((v) => (
+              {misses.map((v) => (
                 <li key={v} className="px-3 py-1.5">
                   {v}
                 </li>
               ))}
             </ul>
+          )}
+          {unavoidable.length > 0 && (
+            <details className="mt-2 text-[12px] text-fg-faint">
+              <summary className="cursor-pointer select-none">
+                {unavoidable.length} {unavoidable.length === 1 ? "clash" : "clashes"} with your wants come from compulsory courses — no plan can avoid them
+              </summary>
+              <ul className="mt-1 max-h-32 divide-y divide-line overflow-auto rounded-md border border-line bg-panel-2">
+                {unavoidable.map((v) => (
+                  <li key={v} className="px-3 py-1.5">
+                    {v}
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
         </section>
       </div>
