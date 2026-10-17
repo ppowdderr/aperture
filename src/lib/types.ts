@@ -51,11 +51,19 @@ export interface Slot {
   campus: Campus;
 }
 
-export type CellPaint = "never" | "avoid" | "prefer" | null;
+export type BlockKind = "free" | "avoid" | "prefer";
+
+/** A painted range on the week grid. `free` is a hard constraint (no classes); the others are soft. */
+export interface TimeBlock {
+  id: string;
+  day: 0 | 1 | 2 | 3 | 4;   // Mon-Fri
+  start: number;            // minutes since 00:00, snapped to the hour
+  end: number;
+  kind: BlockKind;
+}
 
 export interface Preferences {
-  /** grid[day][hour-8] for 08..18 → 5 x 11 */
-  grid: CellPaint[][];
+  blocks: TimeBlock[];
   maxBackToBackHours: number;
   maxGapHours: number;
   campusDaysTogether: boolean;
