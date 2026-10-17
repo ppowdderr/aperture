@@ -50,7 +50,7 @@ export function Shell({ degree, week, results, ledger }: ShellProps) {
         className="grid min-h-0 flex-1 gap-3 p-3"
         style={{
           gridTemplateColumns: "minmax(400px, 5fr) minmax(520px, 7fr)",
-          gridTemplateRows: "auto minmax(0, 1fr) auto",
+          gridTemplateRows: "fit-content(15rem) minmax(0, 1fr) fit-content(11rem)",
           gridTemplateAreas: `"degree degree" "week results" "ledger ledger"`,
         }}
       >
