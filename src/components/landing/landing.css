@@ -1,25 +1,25 @@
 .lp-landing {
-  --landing-bg: #0a1011;
-  --landing-bg-soft: #0d1415;
-  --landing-surface: #10191a;
-  --landing-surface-2: #142021;
-  --landing-surface-3: #192728;
-  --landing-ink: #eff6f3;
-  --landing-muted: #a0afab;
-  --landing-faint: #74817e;
-  --landing-line: rgb(208 235 228 / 13%);
-  --landing-line-strong: rgb(208 235 228 / 24%);
-  --landing-accent: #55d6bd;
-  --landing-accent-ink: #06110e;
-  --landing-accent-soft: rgb(85 214 189 / 12%);
-  --landing-accent-medium: rgb(85 214 189 / 27%);
+  --landing-bg: #080d12;
+  --landing-bg-soft: #0c131a;
+  --landing-surface: #121c26;
+  --landing-surface-2: #172330;
+  --landing-surface-3: #1b2835;
+  --landing-ink: #f3f7fb;
+  --landing-muted: #9aaaba;
+  --landing-faint: #647487;
+  --landing-line: rgb(155 186 215 / 18%);
+  --landing-line-strong: rgb(155 186 215 / 34%);
+  --landing-accent: #9cc5ff;
+  --landing-accent-ink: #0b1825;
+  --landing-accent-soft: rgb(95 153 255 / 14%);
+  --landing-accent-medium: rgb(156 197 255 / 27%);
   --landing-radius-panel: 16px;
   --landing-radius-device: 26px;
 
   min-height: 100dvh;
   overflow-x: clip;
   background:
-    radial-gradient(circle at 82% 7%, rgb(85 214 189 / 8%), transparent 27rem),
+    radial-gradient(circle at 82% 7%, rgb(95 153 255 / 12%), transparent 27rem),
     linear-gradient(var(--landing-bg), var(--landing-bg));
   color: var(--landing-ink);
   color-scheme: dark;
@@ -117,7 +117,7 @@
 .lp-mark::after {
   content: "";
   position: absolute;
-  border: 1px solid rgb(85 214 189 / 42%);
+  border: 1px solid rgb(156 197 255 / 42%);
   border-radius: 50%;
 }
 
@@ -188,8 +188,8 @@
 
 .lp-primaryButton:hover {
   transform: translateY(-1px);
-  background: #6ee2cb;
-  border-color: #6ee2cb;
+  background: #b4d4ff;
+  border-color: #b4d4ff;
 }
 
 .lp-primaryButton:active,
@@ -350,7 +350,7 @@
   z-index: -1;
   width: min(48vw, 620px);
   aspect-ratio: 1;
-  border: 1px solid rgb(85 214 189 / 9%);
+  border: 1px solid rgb(156 197 255 / 9%);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
@@ -360,7 +360,7 @@
 .lp-iris::after {
   content: "";
   position: absolute;
-  border: 1px solid rgb(85 214 189 / 8%);
+  border: 1px solid rgb(156 197 255 / 8%);
   border-radius: inherit;
 }
 
@@ -640,7 +640,7 @@
   height: 19px;
   transform: translateX(-50%);
   border-radius: 999px;
-  background: #060a0b;
+  background: #05090d;
 }
 
 .lp-phoneNotch::after {
@@ -651,7 +651,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #142021;
+  background: #172330;
 }
 
 .lp-browserBar {
@@ -1009,9 +1009,9 @@
 .lp-block {
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgb(85 214 189 / 11%);
+  border: 1px solid rgb(156 197 255 / 11%);
   border-radius: 4px;
-  background: rgb(85 214 189 / 12%);
+  background: rgb(156 197 255 / 12%);
   padding: 2px;
   color: rgb(239 246 243 / 72%);
   font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -1192,7 +1192,7 @@
 }
 
 .lp-rule[open] {
-  border-color: rgb(85 214 189 / 38%);
+  border-color: rgb(156 197 255 / 38%);
 }
 
 .lp-ruleSummary {
@@ -1279,7 +1279,7 @@
   color: var(--landing-accent);
   font-size: 8px;
   text-decoration: underline;
-  text-decoration-color: rgb(85 214 189 / 35%);
+  text-decoration-color: rgb(156 197 255 / 35%);
   text-underline-offset: 3px;
 }
 
@@ -1346,7 +1346,7 @@
 .lp-stackItem:nth-child(1) {
   grid-column: span 7;
   background:
-    radial-gradient(circle at 96% 6%, rgb(85 214 189 / 16%), transparent 11rem),
+    radial-gradient(circle at 96% 6%, rgb(156 197 255 / 16%), transparent 11rem),
     var(--landing-surface);
 }
 

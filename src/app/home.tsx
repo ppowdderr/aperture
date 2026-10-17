@@ -130,7 +130,7 @@ export function Home() {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-bg text-fg">
+    <div className="chat-theme flex h-dvh flex-col bg-bg text-fg">
       <header className="flex h-14 shrink-0 items-center gap-6 border-b border-line px-6">
         <Link href="/" className="text-[17px] font-semibold tracking-tight hover:text-fg">
           Aperture
