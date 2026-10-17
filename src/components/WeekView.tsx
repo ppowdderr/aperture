@@ -9,17 +9,17 @@ const CAMPUS: Record<Slot["campus"], string> = { central: "Central", kb: "King's
 
 /** Muted tints, one per course in a plan. Low saturation so the grid stays quiet; the text label carries the meaning. */
 export const COURSE_TINTS = [
-  "hsl(210 30% 30%)",
-  "hsl(150 25% 27%)",
-  "hsl(30 30% 30%)",
-  "hsl(275 22% 32%)",
-  "hsl(0 28% 32%)",
-  "hsl(90 22% 28%)",
-  "hsl(330 22% 31%)",
-  "hsl(180 25% 27%)",
+  "hsl(217 85% 90%)",
+  "hsl(150 45% 88%)",
+  "hsl(30 85% 88%)",
+  "hsl(275 55% 91%)",
+  "hsl(0 70% 92%)",
+  "hsl(90 45% 87%)",
+  "hsl(330 60% 92%)",
+  "hsl(180 50% 87%)",
 ];
 
-export const FORCED_OUTLINE = "#e0b36a";
+export const FORCED_OUTLINE = "#b7791f";
 
 /** The export lists one row per week range; a lecture taught weeks 1-2 and 3-10 at the same time is one cell here. */
 export function mergeWeekRanges(slots: readonly Slot[]): Slot[] {
