@@ -15,6 +15,21 @@ const centralMarkers = [
   /ROBSON BUILDING/,
   /OLD COLLEGE/,
   /TEVIOT/,
+  /LISTER LEARNING/,
+  /DUGALD STEWART/,
+  /CHARTERIS LAND/,
+  /OLD INFIRMARY/,
+  /OLD SURGEONS HALL/,
+  /HIGH SCHOOL YARDS/,
+  /CHAMBERS STREET/,
+  /MINTO HOUSE/,
+  /ADAM HOUSE/,
+  /PATERSONS LAND/,
+  /ALISON HOUSE/,
+  /BUSINESS SCHOOL/,
+  /ST JOHNS LAND/,
+  /ST LEONARDS LAND/,
+  /\bECCI\b/,
 ];
 
 const kbMarkers = [
@@ -25,6 +40,10 @@ const kbMarkers = [
   /\bSWANN\b/,
   /\bDARWIN\b/,
   /\bNUCLEUS\b/,
+  /MURCHISON HOUSE/,
+  /GRANT INSTITUTE/,
+  /ENGINEERING FORUM/,
+  /JAMES CLERK MAXWELL/,
 ];
 
 /** Map a timetable room description to the small set of campuses needed by the planner. */
