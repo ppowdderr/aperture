@@ -24,6 +24,9 @@ export default function Landing() {
           <a href="#how" className="hover:text-fg">
             How it works
           </a>
+          <Link href="/video" className="hover:text-fg">
+            Demo
+          </Link>
           <a href="https://github.com/ppowdderr/aperture" target="_blank" rel="noreferrer" className="hover:text-fg">
             GitHub
           </a>
