@@ -1,0 +1,682 @@
+[
+  {
+    "code": "BIME08006",
+    "title": "Our Changing World",
+    "credits": 20,
+    "level": 8,
+    "semester": 1,
+    "school": "Edinburgh Medical School",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxbime08006.htm"
+  },
+  {
+    "code": "EDUA08116",
+    "title": "Sustainability and Social Responsibility (UG)",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "Moray House School of Education and Sport",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxedua08116.htm"
+  },
+  {
+    "code": "EDUA08126",
+    "title": "Wicked problems: Reason and Rhetoric",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "Moray House School of Education and Sport",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxedua08126.htm"
+  },
+  {
+    "code": "EDUA08127",
+    "title": "Understanding decolonisation in a globalised world",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "Moray House School of Education and Sport",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxedua08127.htm"
+  },
+  {
+    "code": "EFIE08008",
+    "title": "Sustainable Development Goals: History, Progress and Beyond 2030",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "Edinburgh Futures Institute",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxefie08008.htm"
+  },
+  {
+    "code": "GESC08004",
+    "title": "Living in the Anthropocene",
+    "credits": 20,
+    "level": 8,
+    "semester": 1,
+    "school": "School of Geosciences",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxgesc08004.htm"
+  },
+  {
+    "code": "INFR07003",
+    "title": "Informatics 1 - Critical Skills and Practice",
+    "credits": 20,
+    "level": 7,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr07003.htm"
+  },
+  {
+    "code": "INFR07004",
+    "title": "Informatics 1 - Introduction to Programming",
+    "credits": 20,
+    "level": 7,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr07004.htm"
+  },
+  {
+    "code": "INFR08026",
+    "title": "Informatics 2 - Introduction to Algorithms and Data Structures",
+    "credits": 20,
+    "level": 8,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 1 - Introduction to Computation (INFR08025) AND Informatics 1 - Object Oriented Programming (INFR08029) It is RECOMMENDED that students have passed Discrete Mathematics and Probability (INFR08031)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08026.htm"
+  },
+  {
+    "code": "INFR08027",
+    "title": "Informatics 2C - Introduction to Computer Systems",
+    "credits": 20,
+    "level": 8,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 1 - Introduction to Computation (INFR08025) AND Informatics 1 - Object Oriented Programming (INFR08029)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08027.htm"
+  },
+  {
+    "code": "INFR08030",
+    "title": "Informatics 2 - Foundations of Data Science",
+    "credits": 20,
+    "level": 8,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: ( Informatics 1 - Introduction to Computation (INFR08025) AND Informatics 1 - Object Oriented Programming (INFR08029)) AND ( Introduction to Linear Algebra (MATH08057) OR Linear Algebra 1 (MATH08079))",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08030.htm"
+  },
+  {
+    "code": "INFR08031",
+    "title": "Discrete Mathematics and Probability",
+    "credits": 20,
+    "level": 8,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Introduction to Linear Algebra (MATH08057) OR Linear Algebra 1 (MATH08079) It is RECOMMENDED that students have passed Informatics 1 - Introduction to Computation (INFR08025)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08031.htm"
+  },
+  {
+    "code": "INFR08032",
+    "title": "Informatics 2 - Software Engineering and Professional Practice",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 1 - Introduction to Computation (INFR08025) AND Informatics 1 - Object Oriented Programming (INFR08029)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08032.htm"
+  },
+  {
+    "code": "INFR08034",
+    "title": "Understanding Society with Big Data: Computational Social Science",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08034.htm"
+  },
+  {
+    "code": "INFR08035",
+    "title": "Informatics 1 - Foundations of Computing",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr08035.htm"
+  },
+  {
+    "code": "INFR09032",
+    "title": "System Design Project",
+    "credits": 20,
+    "level": 9,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr09032.htm"
+  },
+  {
+    "code": "INFR09051",
+    "title": "Informatics Large Practical",
+    "credits": 20,
+    "level": 9,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr09051.htm"
+  },
+  {
+    "code": "INFR10022",
+    "title": "Professional Issues (Level 10)",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10022.htm"
+  },
+  {
+    "code": "INFR10044",
+    "title": "Honours Project (Informatics)",
+    "credits": 40,
+    "level": 10,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10044.htm"
+  },
+  {
+    "code": "INFR10052",
+    "title": "Algorithms and Data Structures",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 2 - Introduction to Algorithms and Data Structures (INFR08026) OR Discrete Mathematics and Probability (INFR08031)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10052.htm"
+  },
+  {
+    "code": "INFR10054",
+    "title": "Computational Cognitive Science",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Informatics 1 - Cognitive Science (INFR08020)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10054.htm"
+  },
+  {
+    "code": "INFR10057",
+    "title": "Software Testing",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Informatics 2 - Software Engineering and Professional Practice (INFR08032)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10057.htm"
+  },
+  {
+    "code": "INFR10059",
+    "title": "Introduction to Theoretical Computer Science",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10059.htm"
+  },
+  {
+    "code": "INFR10061",
+    "title": "Elements of Programming Languages",
+    "credits": 10,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10061.htm"
+  },
+  {
+    "code": "INFR10065",
+    "title": "Compiling Techniques",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10065.htm"
+  },
+  {
+    "code": "INFR10067",
+    "title": "Computer Security",
+    "credits": 20,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10067.htm"
+  },
+  {
+    "code": "INFR10074",
+    "title": "Computer Communications and Networks",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10074.htm"
+  },
+  {
+    "code": "INFR10076",
+    "title": "Computer Architecture and Design",
+    "credits": 20,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10076.htm"
+  },
+  {
+    "code": "INFR10078",
+    "title": "Foundations of Natural Language Processing",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 2 - Introduction to Algorithms and Data Structures (INFR08026)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10078.htm"
+  },
+  {
+    "code": "INFR10079",
+    "title": "Operating Systems",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10079.htm"
+  },
+  {
+    "code": "INFR10080",
+    "title": "Introduction to Databases",
+    "credits": 20,
+    "level": 10,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10080.htm"
+  },
+  {
+    "code": "INFR10084",
+    "title": "Informatics Experiential Learning (Level 10)",
+    "credits": 20,
+    "level": 10,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10084.htm"
+  },
+  {
+    "code": "INFR10086",
+    "title": "Machine Learning",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Informatics 2 - Foundations of Data Science (INFR08030)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10086.htm"
+  },
+  {
+    "code": "INFR10090",
+    "title": "Introduction to Mobile Robotics",
+    "credits": 20,
+    "level": 10,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr10090.htm"
+  },
+  {
+    "code": "INFR11098",
+    "title": "Secure Programming",
+    "credits": 10,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Computer Security (INFR10067)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11098.htm"
+  },
+  {
+    "code": "INFR11144",
+    "title": "Blockchains and Distributed Ledgers",
+    "credits": 10,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Algorithms and Data Structures (INFR10052)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11144.htm"
+  },
+  {
+    "code": "INFR11150",
+    "title": "Principles and Design of IoT Systems",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11150.htm"
+  },
+  {
+    "code": "INFR11208",
+    "title": "Security Engineering",
+    "credits": 10,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Computer Security (INFR10067)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11208.htm"
+  },
+  {
+    "code": "INFR11209",
+    "title": "Computational Neuroscience",
+    "credits": 10,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11209.htm"
+  },
+  {
+    "code": "INFR11213",
+    "title": "Advanced Robotics",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11213.htm"
+  },
+  {
+    "code": "INFR11217",
+    "title": "Advanced Database Systems (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Introduction to Databases (INFR10080)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11217.htm"
+  },
+  {
+    "code": "INFR11218",
+    "title": "Algorithmic Game Theory and its Applications (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Algorithms and Data Structures (INFR10052)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11218.htm"
+  },
+  {
+    "code": "INFR11219",
+    "title": "Automatic Speech Recognition (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Speech Processing (Hons) (LASC10061)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11219.htm"
+  },
+  {
+    "code": "INFR11221",
+    "title": "Introduction to Modern Cryptography (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Computer Security (INFR10067) AND Algorithms and Data Structures (INFR10052)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11221.htm"
+  },
+  {
+    "code": "INFR11223",
+    "title": "Machine Learning Practical (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11223.htm"
+  },
+  {
+    "code": "INFR11226",
+    "title": "Parallel Programming Languages and Systems (Level 11) (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11226.htm"
+  },
+  {
+    "code": "INFR11227",
+    "title": "Quantum Cyber Security (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Computer Security (INFR10067)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11227.htm"
+  },
+  {
+    "code": "INFR11229",
+    "title": "Text Technologies for Data Science (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": "full",
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11229.htm"
+  },
+  {
+    "code": "INFR11230",
+    "title": "Usable Security and Privacy (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11230.htm"
+  },
+  {
+    "code": "INFR11233",
+    "title": "Computational Cognitive Neuroscience (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Computational Neuroscience (INFR11209)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11233.htm"
+  },
+  {
+    "code": "INFR11246",
+    "title": "Computer Graphics: Rendering",
+    "credits": 10,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11246.htm"
+  },
+  {
+    "code": "INFR11247",
+    "title": "Computer Graphics: Geometry and Simulation (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11247.htm"
+  },
+  {
+    "code": "INFR11249",
+    "title": "Applied Cloud Programming (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11249.htm"
+  },
+  {
+    "code": "INFR11256",
+    "title": "Introduction to Quantum Computing",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Quantum Mechanics (PHYS09053) OR Principles of Quantum Mechanics (PHYS10094) OR Introduction to Linear Algebra (MATH08057) AND Probability with Applications (MATH08067)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11256.htm"
+  },
+  {
+    "code": "INFR11278",
+    "title": "Computer Vision (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11278.htm"
+  },
+  {
+    "code": "INFR11282",
+    "title": "Topics in Biomedical Informatics (UG)",
+    "credits": 10,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11282.htm"
+  },
+  {
+    "code": "INFR11288",
+    "title": "Advanced Topics in Natural Language Processing (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "Students MUST have passed: Accelerated Natural Language Processing (INFR11125) OR Foundations of Natural Language Processing (INFR10078)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11288.htm"
+  },
+  {
+    "code": "INFR11289",
+    "title": "Advanced Topics in Machine Learning (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11289.htm"
+  },
+  {
+    "code": "INFR11290",
+    "title": "Robot and Reinforcement Learning (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11290.htm"
+  },
+  {
+    "code": "INFR11298",
+    "title": "Probabilistic Machine Learning",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11298.htm"
+  },
+  {
+    "code": "INFR11299",
+    "title": "Human-Computer Interaction",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11299.htm"
+  },
+  {
+    "code": "INFR11301",
+    "title": "Distributed Systems",
+    "credits": 20,
+    "level": 11,
+    "semester": 1,
+    "school": "School of Informatics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11301.htm"
+  },
+  {
+    "code": "INFR11305",
+    "title": "Topics in Programming Languages and Semantics (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Elements of Programming Languages (INFR10061) OR Introduction to Theoretical Computer Science (INFR10059)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11305.htm"
+  },
+  {
+    "code": "INFR11306",
+    "title": "Neurosymbolic AI (UG)",
+    "credits": 20,
+    "level": 11,
+    "semester": 2,
+    "school": "School of Informatics",
+    "prerequisitesText": "It is RECOMMENDED that students have passed Machine Learning (INFR10086) OR Applied Machine Learning (INFR11211)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxinfr11306.htm"
+  },
+  {
+    "code": "MATH07005",
+    "title": "Calculus and Algebra Fundamentals for Informatics",
+    "credits": 20,
+    "level": 7,
+    "semester": 1,
+    "school": "School of Mathematics",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxmath07005.htm"
+  },
+  {
+    "code": "MATH08079",
+    "title": "Linear Algebra 1",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "School of Mathematics",
+    "prerequisitesText": "Students MUST have passed: Introduction to Mathematics at University (MATH08078)",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxmath08079.htm"
+  },
+  {
+    "code": "SSPS08012",
+    "title": "Understanding Gender in the Contemporary World",
+    "credits": 20,
+    "level": 8,
+    "semester": 1,
+    "school": "School of Social and Political Science",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxssps08012.htm"
+  },
+  {
+    "code": "VETS08016",
+    "title": "Healthy Eating for People and Planet",
+    "credits": 20,
+    "level": 8,
+    "semester": 2,
+    "school": "Royal (Dick) School of Veterinary Studies",
+    "prerequisitesText": "",
+    "drpsUrl": "https://www.drps.ed.ac.uk/26-27/dpt/cxvets08016.htm"
+  }
+]
