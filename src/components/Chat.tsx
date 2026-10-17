@@ -149,7 +149,7 @@ export function Chat({ student, courses, preferences, onPreferencesChange }: Cha
         <button
           type="submit"
           disabled={busy || !draft.trim()}
-          className="h-10 rounded-md bg-accent px-4 text-[15px] font-medium text-white disabled:opacity-40"
+          className="h-10 rounded-md bg-accent px-4 text-[15px] font-medium text-accent-ink disabled:opacity-40"
         >
           {busy ? "…" : "Send"}
         </button>

@@ -19,7 +19,7 @@ export const COURSE_TINTS = [
   "hsl(180 50% 87%)",
 ];
 
-export const FORCED_OUTLINE = "#b7791f";
+export const FORCED_OUTLINE = "#ff9a70";
 
 /** The export lists one row per week range; a lecture taught weeks 1-2 and 3-10 at the same time is one cell here. */
 export function mergeWeekRanges(slots: readonly Slot[]): Slot[] {

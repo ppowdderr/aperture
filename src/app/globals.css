@@ -41,22 +41,22 @@ body {
 }
 
 .chat-theme {
-  --color-bg: #0e1318;
-  --color-surface: #18212a;
-  --color-panel: #121920;
-  --color-panel-2: #222d38;
-  --color-rule: #293540;
-  --color-line: #3b4a59;
-  --color-line-strong: #566575;
-  --color-fg: #f5f7fa;
-  --color-fg-muted: #b7c3cf;
-  --color-fg-faint: #91a0ae;
+  --color-bg: #080d12;
+  --color-surface: #0c131a;
+  --color-panel: #121c26;
+  --color-panel-2: #172330;
+  --color-rule: rgb(155 186 215 / 10%);
+  --color-line: rgb(155 186 215 / 18%);
+  --color-line-strong: rgb(155 186 215 / 34%);
+  --color-fg: #f3f7fb;
+  --color-fg-muted: #9aaaba;
+  --color-fg-faint: #647487;
   --color-accent: #9cc5ff;
-  --color-accent-soft: #203a57;
-  --color-accent-dim: #203a57;
-  --color-accent-ink: #0b1622;
-  --color-warning: #f3c879;
-  --color-course-ink: #101820;
+  --color-accent-soft: rgb(95 153 255 / 14%);
+  --color-accent-dim: rgb(95 153 255 / 14%);
+  --color-accent-ink: #0b1825;
+  --color-warning: #ff9a70;
+  --color-course-ink: #0b1825;
 
   background: var(--color-bg);
   color: var(--color-fg);
