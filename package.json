@@ -12,7 +12,8 @@
     "seed": "tsx scripts/seed.ts",
     "scrape:drps": "tsx scripts/scrape-drps.ts",
     "scrape:courses": "tsx scripts/scrape-courses.ts",
-    "export:timetable": "tsx scripts/export-timetable.ts"
+    "export:timetable": "tsx scripts/export-timetable.ts",
+    "solve": "tsx src/lib/solver/cli.ts"
   },
   "dependencies": {
     "mongoose": "^9.11.1",
