@@ -43,6 +43,7 @@ export function solve(input: SolveInput): Solution[] {
     courses,
     student,
     allYears: input.allYears,
+    slots,
     pinned: preferences.pinned,
     excluded: preferences.excluded,
     cap: SEARCH_CAP,

@@ -1,4 +1,5 @@
-import type { Course, OptionGroup, ProgrammeYear, StudentState } from "../types";
+import type { Course, OptionGroup, ProgrammeYear, Slot, StudentState } from "../types";
+import { slotsOverlap } from "./clash";
 
 /** Boolean prerequisite expression parsed from the "MUST have passed" clause of DRPS prose. */
 export type PrereqExpr =
@@ -22,6 +23,8 @@ export interface SearchInput {
   excluded?: string[];
   /** Every year of the programme; lets open groups exclude courses that are compulsory elsewhere. */
   allYears?: ProgrammeYear[];
+  /** Fixed timetable activities; lets the DFS discard clashy sets before they count toward `cap`. */
+  slots?: Slot[];
   /** Stop after this many legal sets. */
   cap?: number;
 }
@@ -189,6 +192,13 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
   const groupRemaining = groups.map((g) =>
     [...g.members].filter((m) => forcedSet.has(m) || candidates.includes(m)).reduce((s, m) => s + byCode.get(m)!.credits, 0),
   );
+  const fixedSlots = new Map<string, Slot[]>();
+  for (const slot of input.slots ?? []) {
+    if (slot.group !== undefined) continue;
+    const courseSlots = fixedSlots.get(slot.course) ?? [];
+    courseSlots.push(slot);
+    fixedSlots.set(slot.course, courseSlots);
+  }
 
   const chosen: string[] = [];
   let credits = 0;
@@ -216,6 +226,18 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
     sem[0] >= SEMESTER_MIN && sem[0] <= SEMESTER_MAX &&
     sem[1] >= SEMESTER_MIN && sem[1] <= SEMESTER_MAX &&
     groups.every((g, i) => groupCredit[i] >= g.group.minCredits && groupCredit[i] <= g.group.maxCredits);
+
+  const introducesAvoidableFixedClash = (code: string) => {
+    const incoming = fixedSlots.get(code);
+    if (!incoming || incoming.length === 0) return false;
+    for (const other of chosen) {
+      if (forcedSet.has(code) && forcedSet.has(other)) continue;
+      const existing = fixedSlots.get(other);
+      if (!existing) continue;
+      if (incoming.some((a) => existing.some((b) => slotsOverlap(a, b)))) return true;
+    }
+    return false;
+  };
 
   // Credits still obtainable from candidates at index >= i, used to prune dead branches.
   const suffix = new Array<number>(candidates.length + 1).fill(0);
@@ -245,13 +267,15 @@ export function searchLegalYears(input: SearchInput): LegalYear[] {
     const gs = groupOf(code).map((g) => groups.indexOf(g));
     const c = byCode.get(code)!.credits;
     // take
-    chosen.push(code);
-    add(code, 1);
-    for (const g of gs) groupRemaining[g] -= c;
-    dfs(i + 1);
-    for (const g of gs) groupRemaining[g] += c;
-    add(code, -1);
-    chosen.pop();
+    if (!introducesAvoidableFixedClash(code)) {
+      chosen.push(code);
+      add(code, 1);
+      for (const g of gs) groupRemaining[g] -= c;
+      dfs(i + 1);
+      for (const g of gs) groupRemaining[g] += c;
+      add(code, -1);
+      chosen.pop();
+    }
     // skip (not allowed for pinned)
     if (pinned.has(code)) return;
     for (const g of gs) groupRemaining[g] -= c;
