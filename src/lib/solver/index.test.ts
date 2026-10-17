@@ -3,7 +3,7 @@ import { solve } from "./index";
 import type { Preferences } from "../types";
 
 const emptyPrefs: Preferences = {
-  grid: Array.from({ length: 5 }, () => Array<null>(11).fill(null)),
+  blocks: [],
   maxBackToBackHours: 4, maxGapHours: 3, campusDaysTogether: false,
   wantKeywords: [], pinned: [], excluded: [],
 };
