@@ -39,3 +39,33 @@ body {
 ::selection {
   background: var(--color-accent-dim);
 }
+
+.chat-theme {
+  --color-bg: #0e1318;
+  --color-surface: #18212a;
+  --color-panel: #121920;
+  --color-panel-2: #222d38;
+  --color-rule: #293540;
+  --color-line: #3b4a59;
+  --color-line-strong: #566575;
+  --color-fg: #f5f7fa;
+  --color-fg-muted: #b7c3cf;
+  --color-fg-faint: #91a0ae;
+  --color-accent: #9cc5ff;
+  --color-accent-soft: #203a57;
+  --color-accent-dim: #203a57;
+  --color-accent-ink: #0b1622;
+  --color-warning: #f3c879;
+  --color-course-ink: #101820;
+
+  background: var(--color-bg);
+  color: var(--color-fg);
+  color-scheme: dark;
+  font-family: var(--font-atkinson), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.chat-theme ::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-fg);
+}

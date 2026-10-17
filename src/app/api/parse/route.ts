@@ -9,7 +9,7 @@ const bodySchema = z
   .object({
     programmeCode: z.string().regex(/^[A-Z0-9]+$/),
     year: z.number().int().min(1).max(5),
-    message: z.string().min(1).max(1000),
+    message: z.string().trim().min(1).max(500),
     preferences: preferencesSchema,
     student: studentSchema.optional(),
     history: z.array(z.object({ role: z.enum(["you", "aperture"]), text: z.string().max(1000) })).max(20).optional(),
