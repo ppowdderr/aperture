@@ -18,7 +18,7 @@ const OptionGroupSchema = new Schema<OptionGroup>(optionGroupDefinition, {
 });
 
 const programmeYearDefinition = {
-  programmeCode: { type: String, required: true, trim: true, index: true },
+  programmeCode: { type: String, required: true, trim: true },
   programmeTitle: { type: String, required: true, trim: true },
   year: { type: Number, required: true, min: 1, max: 5 },
   compulsory: { type: [String], required: true, default: [] },
