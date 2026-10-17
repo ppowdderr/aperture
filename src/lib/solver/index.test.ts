@@ -55,6 +55,60 @@ describe("solve", () => {
     expect(solve({ ...base, preferences: emptyPrefs })).toEqual(out);
   });
 
+  it("gives three distinct, clash-free year-4 solutions on real data in under a second", () => {
+    const year4 = years.find((y) => y.year === 4)!;
+    const year4Student: StudentState = {
+      ...student,
+      year: 4,
+      passed: years.filter((y) => y.year < 4).flatMap((y) => y.compulsory),
+    };
+    const t0 = performance.now();
+    const out = solve({
+      ...base,
+      programme: year4,
+      student: year4Student,
+      preferences: emptyPrefs,
+    });
+    expect(performance.now() - t0).toBeLessThan(1000);
+    expect(out).toHaveLength(3);
+    for (let i = 0; i < out.length; i++) {
+      for (let j = 0; j < i; j++) {
+        const other = new Set(out[j].courses);
+        expect(out[i].courses.filter((c) => !other.has(c)).length).toBeGreaterThanOrEqual(MIN_DIFFERENT_COURSES);
+      }
+    }
+    for (const sol of out) {
+      expect(sol.violations.some((v) => v.startsWith("Clash:"))).toBe(false);
+    }
+  });
+
+  it("keeps the years 1-3 course selections unchanged", () => {
+    const expected = [
+      [["EDUA08116", "INFR07003", "INFR07004", "INFR08035", "MATH07005", "MATH08079"]],
+      [["EDUA08116", "INFR08026", "INFR08027", "INFR08030", "INFR08031", "INFR08032"]],
+      [
+        ["INFR09032", "INFR09051", "INFR10022", "INFR10052", "INFR10065", "INFR10067", "INFR10074"],
+        ["INFR09032", "INFR09051", "INFR10022", "INFR10052", "INFR10067", "INFR10076", "INFR10079"],
+        ["INFR09032", "INFR09051", "INFR10022", "INFR10057", "INFR10065", "INFR10067", "INFR10076"],
+      ],
+    ];
+
+    for (const year of [1, 2, 3] as const) {
+      const programmeYear = years.find((y) => y.year === year)!;
+      const out = solve({
+        ...base,
+        programme: programmeYear,
+        student: {
+          ...student,
+          year,
+          passed: years.filter((y) => y.year < year).flatMap((y) => y.compulsory),
+        },
+        preferences: emptyPrefs,
+      });
+      expect(out.map((solution) => solution.courses)).toEqual(expected[year - 1]);
+    }
+  });
+
   it("honours pinned and excluded courses and explains keywords", () => {
     const prefs = { ...emptyPrefs, pinned: ["INFR10067"], excluded: ["INFR10065"], wantKeywords: ["security"] };
     const out = solve({ ...base, preferences: prefs });

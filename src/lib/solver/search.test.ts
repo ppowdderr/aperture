@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { loadCourses, loadProgramme } from "../data";
-import type { Course, ProgrammeYear, StudentState } from "../types";
+import type { Course, ProgrammeYear, Slot, StudentState } from "../types";
 import {
   parsePrerequisites,
   prereqSatisfied,
@@ -48,6 +48,20 @@ const programme: ProgrammeYear = {
   drpsUrl: "",
 };
 const student = (passed: string[] = []): StudentState => ({ programmeCode: "TEST", year: 3, passed, background: {} });
+
+function fixedSlot(code: string, start: number): Slot {
+  return {
+    course: code,
+    activity: "Lecture",
+    semester: 1,
+    day: 0,
+    start,
+    end: start + 60,
+    weeks: [1],
+    room: "Test",
+    campus: "central",
+  };
+}
 
 describe("searchLegalYears", () => {
   it("forces compulsory courses, totals 120 credits and keeps every group in range", () => {
@@ -97,6 +111,40 @@ describe("searchLegalYears", () => {
 
   it("respects the result cap", () => {
     expect(searchLegalYears({ programme, courses, student: student(), cap: 2 })).toHaveLength(2);
+  });
+
+  it("skips an early fixed-lecture clash instead of spending the cap on it", () => {
+    const out = searchLegalYears({
+      programme,
+      courses,
+      student: student(),
+      cap: 1,
+      slots: [
+        fixedSlot("INFR10011", 9 * 60),
+        fixedSlot("INFR10013", 9 * 60),
+      ],
+    });
+
+    expect(out).toHaveLength(1);
+    expect(out[0].courses).not.toContain("INFR10013");
+  });
+
+  it("keeps a clash between compulsory courses searchable", () => {
+    const out = searchLegalYears({
+      programme,
+      courses,
+      student: student(),
+      cap: 1,
+      slots: [
+        fixedSlot("INFR10001", 9 * 60),
+        fixedSlot("INFR10002", 9 * 60),
+      ],
+    });
+
+    expect(out).toHaveLength(1);
+    expect(out[0].courses).toEqual(
+      expect.arrayContaining(["INFR10001", "INFR10002"]),
+    );
   });
 });
 
