@@ -13,6 +13,7 @@ describe("campusFor", () => {
   it("maps King's Buildings room descriptions", () => {
     expect(campusFor("Lecture Theatre - Nucleus")).toBe("kb");
     expect(campusFor("JCMB Lecture Theatre A")).toBe("kb");
+    expect(campusFor("G.04 - Murchison House")).toBe("kb");
   });
 
   it("returns other for unknown rooms", () => {
