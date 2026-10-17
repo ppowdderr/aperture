@@ -259,7 +259,7 @@ export function WeekGrid({ value, onChange }: WeekGridProps) {
         Drag on the grid to mark time you want kept free. Arrow keys move, Enter marks an hour, Delete removes a block, Enter on a
         block changes its type.
       </p>
-      <div className="grid min-h-[280px] flex-1 grid-cols-[2.5rem_1fr] grid-rows-[1.25rem_1fr] gap-x-2 gap-y-1 text-[11px] text-fg-faint select-none">
+      <div className="grid min-h-[360px] flex-1 grid-cols-[2.5rem_1fr] grid-rows-[1.5rem_1fr] gap-x-2 gap-y-1 text-[13px] text-fg-faint select-none">
         <div />
         <div className="grid grid-cols-5" aria-hidden>
           {DAYS.map((d) => (
@@ -364,11 +364,11 @@ function Block({
         aria-expanded={open}
         onPointerDown={onPointerDown}
         onKeyDown={onKeyDown}
-        className={`absolute cursor-grab overflow-hidden rounded-[5px] border px-2 py-1 text-left text-[12px] leading-tight active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${KIND_CLASS[b.kind]}`}
+        className={`absolute cursor-grab overflow-hidden rounded-[5px] border px-2 py-1 text-left text-[13px] leading-tight active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${KIND_CLASS[b.kind]}`}
         style={cellStyle(b.day, b.start, b.end)}
       >
         <span className="font-medium">{KIND_LABEL[b.kind]}</span>
-        {tall && <span className="block font-mono text-[11px] opacity-70">{fmt(b.start)}–{fmt(b.end)}</span>}
+        {tall && <span className="block font-mono text-[12px] opacity-70">{fmt(b.start)}–{fmt(b.end)}</span>}
         <span data-edge="start" className="absolute inset-x-0 top-0 h-1.5 cursor-ns-resize" />
         <span data-edge="end" className="absolute inset-x-0 bottom-0 h-1.5 cursor-ns-resize" />
       </button>
@@ -389,7 +389,7 @@ function Popover({ block: b, onKind, onRemove }: { block: TimeBlock; onKind: (k:
       ref={ref}
       role="dialog"
       aria-label={`${DAY_NAMES[b.day]} ${fmt(b.start)}–${fmt(b.end)}`}
-      className="absolute z-10 w-60 rounded-lg border border-line-strong bg-panel p-1 text-[13px] shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
+      className="absolute z-10 w-60 rounded-lg border border-line-strong bg-panel p-1 text-[15px] shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
       style={{
         left: left ? undefined : `calc(${b.day * 20}% + 2px)`,
         right: left ? `calc(${(4 - b.day) * 20}% + 2px)` : undefined,
@@ -409,7 +409,7 @@ function Popover({ block: b, onKind, onRemove }: { block: TimeBlock; onKind: (k:
             className="flex items-baseline justify-between gap-3 rounded-md px-2.5 py-1.5 text-left hover:bg-panel-2 focus-visible:bg-panel-2 focus-visible:outline-none aria-checked:text-accent"
           >
             <span>{k.label}</span>
-            <span className="whitespace-nowrap text-[11px] text-fg-faint">{k.hint}</span>
+            <span className="whitespace-nowrap text-[12px] text-fg-faint">{k.hint}</span>
           </button>
         ))}
       </div>
@@ -424,7 +424,7 @@ function Popover({ block: b, onKind, onRemove }: { block: TimeBlock; onKind: (k:
 function Controls({ value, onChange }: WeekGridProps) {
   const set = <K extends keyof Preferences>(k: K, v: Preferences[K]) => onChange({ ...value, [k]: v });
   return (
-    <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 text-[13px]">
+    <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 text-[15px]">
       <Hour label="No classes before" value={value.earliestStart} onChange={(v) => set("earliestStart", v)} />
       <Hour label="Done by" value={value.latestEnd} onChange={(v) => set("latestEnd", v)} />
       <Num label="Max hours back-to-back" value={value.maxBackToBackHours} min={1} max={10} onChange={(v) => set("maxBackToBackHours", v)} />
@@ -447,7 +447,7 @@ function Num({ label, value, min, max, onChange }: { label: string; value: numbe
   const id = useId();
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-[12px] text-fg-faint">
+      <label htmlFor={id} className="text-[13px] text-fg-faint">
         {label}
       </label>
       <input
@@ -471,7 +471,7 @@ function Hour({ label, value, onChange }: { label: string; value: number | null;
   const hours = Array.from({ length: (DAY_END - DAY_START) / 60 + 1 }, (_, i) => DAY_START + i * 60);
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-[12px] text-fg-faint">
+      <label htmlFor={id} className="text-[13px] text-fg-faint">
         {label}
       </label>
       <select

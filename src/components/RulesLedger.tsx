@@ -52,7 +52,7 @@ export function RulesLedger({ rules }: RulesLedgerProps) {
 
   return (
     <div className="space-y-3">
-      <p className="text-[12px] text-fg-faint">
+      <p className="text-[13px] text-fg-faint">
         {rules.length} {rules.length === 1 ? "rule" : "rules"} enforced by this
         solution. Hover a line to read the exact DRPS sentence.
       </p>
@@ -63,7 +63,7 @@ export function RulesLedger({ rules }: RulesLedgerProps) {
 
           return (
             <section key={kind} className="min-w-0">
-              <h3 className="mb-1 text-[12px] font-medium text-fg-muted">
+              <h3 className="mb-1 text-[13px] font-medium text-fg-muted">
                 {kindLabels[kind]}{" "}
                 <span className="font-mono text-fg-faint">({group.length})</span>
               </h3>
@@ -76,7 +76,7 @@ export function RulesLedger({ rules }: RulesLedgerProps) {
                     <span
                       title={rule.source}
                       aria-label={`DRPS source: ${rule.source}`}
-                      className="min-w-0 flex-1 cursor-help text-[13px]"
+                      className="min-w-0 flex-1 cursor-help text-[15px]"
                     >
                       {formatRule(rule)}
                     </span>
@@ -84,7 +84,7 @@ export function RulesLedger({ rules }: RulesLedgerProps) {
                       href={rule.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="shrink-0 text-[11px] text-accent hover:underline"
+                      className="shrink-0 text-[12px] text-accent hover:underline"
                     >
                       DRPS source ↗
                     </a>

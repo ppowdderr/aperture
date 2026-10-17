@@ -48,18 +48,42 @@ export function Home() {
     return "Paint the week you want; plans appear on the right.";
   })();
   const captionTone = dataError || solve.status === "error" ? "text-amber-200" : "text-fg-faint";
+  const [degreeOpen, setDegreeOpen] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
+  const programmeTitle = data?.years[0]?.programmeTitle ?? PROGRAMME;
+  const rules = current?.rulesSatisfied ?? [];
 
   return (
     <Shell
       degree={
-        defaultPassed ? (
-          <DegreePanel
-            initialProgrammeCode={PROGRAMME}
-            initialYear={YEAR}
-            initialPassed={defaultPassed}
-            yearDefaults={yearDefaults ?? undefined}
-            onChange={setEdited}
-          />
+        defaultPassed && student ? (
+          <div className="flex flex-col gap-3">
+            <Disclosure
+              open={degreeOpen}
+              onToggle={() => setDegreeOpen((o) => !o)}
+              label={degreeOpen ? "Done" : "Edit"}
+              summary={
+                <>
+                  <span className="text-fg">{programmeTitle}</span>
+                  <Dot />
+                  <span className="text-fg">Year {student.year}</span>
+                  <Dot />
+                  <span>
+                    {student.passed.length} {student.passed.length === 1 ? "course" : "courses"} passed
+                  </span>
+                </>
+              }
+            />
+            <div className={degreeOpen ? "max-h-[18rem]" : "hidden"}>
+              <DegreePanel
+                initialProgrammeCode={PROGRAMME}
+                initialYear={YEAR}
+                initialPassed={defaultPassed}
+                yearDefaults={yearDefaults ?? undefined}
+                onChange={setEdited}
+              />
+            </div>
+          </div>
         ) : (
           <p className="text-fg-faint">{dataError ? `Could not load programme data: ${dataError}` : "Loading programme…"}</p>
         )
@@ -75,7 +99,7 @@ export function Home() {
             }}
           >
             <div className="flex items-center justify-between gap-4">
-              <span role="status" aria-live="polite" className={`text-[12px] ${captionTone}`}>
+              <span role="status" aria-live="polite" className={`text-[13px] ${captionTone}`}>
                 {caption}
               </span>
               <button
@@ -86,7 +110,7 @@ export function Home() {
                 {solve.status === "loading" ? "Solving…" : "Solve"}
               </button>
             </div>
-            <label htmlFor="wants" className="mt-1 text-[12px] text-fg-faint">
+            <label htmlFor="wants" className="mt-1 text-[13px] text-fg-faint">
               What you want, in your own words
             </label>
             <textarea
@@ -115,7 +139,46 @@ export function Home() {
           <p className="text-fg-faint">Up to three valid years that match your week will appear here.</p>
         )
       }
-      ledger={<RulesLedger rules={current?.rulesSatisfied ?? []} />}
+      ledger={
+        <div className="flex flex-col gap-3">
+          <Disclosure
+            open={rulesOpen}
+            onToggle={() => setRulesOpen((o) => !o)}
+            label={rulesOpen ? "Hide" : "Show"}
+            summary={
+              rules.length === 0 ? (
+                <span>Every rule a plan satisfies, with a link to the DRPS line it came from.</span>
+              ) : (
+                <span>
+                  <span className="text-fg">{rules.length} degree rules</span> satisfied by this plan, each linked to its DRPS line.
+                </span>
+              )
+            }
+          />
+          {rulesOpen && <RulesLedger rules={rules} />}
+        </div>
+      }
     />
+  );
+}
+
+function Dot() {
+  return <span aria-hidden className="mx-2 text-fg-faint">·</span>;
+}
+
+/** One summary line with a single text button; the detail renders below when open. */
+function Disclosure({ open, onToggle, label, summary }: { open: boolean; onToggle: () => void; label: string; summary: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <p className="min-w-0 truncate text-[15px] text-fg-muted">{summary}</p>
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={onToggle}
+        className="shrink-0 rounded-md border border-line px-3 py-1 text-[14px] text-fg-muted hover:text-fg focus-visible:ring-2 focus-visible:ring-accent"
+      >
+        {label}
+      </button>
+    </div>
   );
 }
