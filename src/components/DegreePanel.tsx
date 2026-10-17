@@ -190,7 +190,7 @@ export function DegreePanel({
   }
 
   return (
-    <div className="flex max-h-[18rem] flex-col gap-3">
+    <div className="flex max-h-[70vh] flex-col gap-3">
       {(programmeError || courseError) && (
         <div
           role="status"

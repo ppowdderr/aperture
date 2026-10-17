@@ -57,6 +57,10 @@ export function placeBlock(blocks: TimeBlock[], block: TimeBlock): TimeBlock[] {
 interface WeekGridProps {
   value: Preferences;
   onChange: (next: Preferences) => void;
+  /** Drawn inside the canvas underneath the painted blocks (e.g. a plan's classes). */
+  overlay?: ReactNode;
+  /** Render the numeric/hour controls below the grid (default true). */
+  controls?: boolean;
 }
 
 type Drag =
@@ -64,7 +68,7 @@ type Drag =
   | { mode: "move"; id: string; origin: TimeBlock; day: Day; start: number; moved: boolean }
   | { mode: "resize"; id: string; origin: TimeBlock; edge: "start" | "end"; moved: boolean };
 
-export function WeekGrid({ value, onChange }: WeekGridProps) {
+export function WeekGrid({ value, onChange, overlay, controls = true }: WeekGridProps) {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
   const [preview, setPreview] = useState<TimeBlock[] | null>(null);
@@ -293,6 +297,7 @@ export function WeekGrid({ value, onChange }: WeekGridProps) {
             backgroundPosition: "-1px 0, 0 -1px",
           }}
         >
+          {overlay}
           {canvasFocused && caret && (
             <div
               aria-hidden
@@ -318,7 +323,7 @@ export function WeekGrid({ value, onChange }: WeekGridProps) {
           ))}
         </div>
       </div>
-      <Controls value={value} onChange={onChange} />
+      {controls && <Controls value={value} onChange={onChange} />}
     </div>
   );
 }
@@ -332,10 +337,11 @@ function cellStyle(day: number, start: number, end: number) {
   };
 }
 
+/** Outlines, not fills: a plan's classes drawn underneath must stay readable through a block. */
 const KIND_CLASS: Record<BlockKind, string> = {
-  free: "border-line-strong bg-panel text-fg",
-  avoid: "border-dashed border-fg-faint bg-panel text-fg-muted",
-  prefer: "border-accent/60 bg-accent-dim/60 text-fg",
+  free: "border-dashed border-fg-muted bg-fg/[0.04] text-fg",
+  avoid: "border-dotted border-fg-faint bg-fg/[0.02] text-fg-muted",
+  prefer: "border-dashed border-accent/70 bg-accent/[0.06] text-fg",
 };
 
 function Block({
@@ -364,7 +370,7 @@ function Block({
         aria-expanded={open}
         onPointerDown={onPointerDown}
         onKeyDown={onKeyDown}
-        className={`absolute cursor-grab overflow-hidden rounded-[5px] border px-2 py-1 text-left text-[13px] leading-tight active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${KIND_CLASS[b.kind]}`}
+        className={`absolute z-[1] flex cursor-grab flex-col items-start overflow-hidden rounded-[5px] border px-2 py-1 text-left text-[13px] leading-tight active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none ${KIND_CLASS[b.kind]}`}
         style={cellStyle(b.day, b.start, b.end)}
       >
         <span className="font-medium">{KIND_LABEL[b.kind]}</span>
@@ -421,7 +427,7 @@ function Popover({ block: b, onKind, onRemove }: { block: TimeBlock; onKind: (k:
   );
 }
 
-function Controls({ value, onChange }: WeekGridProps) {
+export function Controls({ value, onChange }: Pick<WeekGridProps, "value" | "onChange">) {
   const set = <K extends keyof Preferences>(k: K, v: Preferences[K]) => onChange({ ...value, [k]: v });
   return (
     <div className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-3 text-[15px]">
