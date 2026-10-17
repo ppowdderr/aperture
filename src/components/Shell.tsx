@@ -19,9 +19,9 @@ interface ShellProps {
 export function Shell({ degree, week, results, ledger }: ShellProps) {
   return (
     <div className="flex h-dvh min-w-[1280px] flex-col bg-bg text-fg">
-      <header className="flex h-12 shrink-0 items-center justify-between border-b border-line px-4">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b border-line px-5">
         <div className="flex items-baseline gap-3">
-          <span className="text-[15px] font-semibold tracking-tight">Aperture</span>
+          <span className="text-[17px] font-semibold tracking-tight">Aperture</span>
           <span className="hidden text-fg-muted lg:inline">
             Describe the week you want; get back the legal course choices that produce it.
           </span>
@@ -47,10 +47,10 @@ export function Shell({ degree, week, results, ledger }: ShellProps) {
       </header>
 
       <main
-        className="grid min-h-0 flex-1 gap-3 p-3"
+        className="grid min-h-0 flex-1 gap-4 p-4"
         style={{
           gridTemplateColumns: "minmax(400px, 5fr) minmax(520px, 7fr)",
-          gridTemplateRows: "fit-content(15rem) minmax(0, 1fr) fit-content(11rem)",
+          gridTemplateRows: "fit-content(24rem) minmax(0, 1fr) fit-content(16rem)",
           gridTemplateAreas: `"degree degree" "week results" "ledger ledger"`,
         }}
       >
@@ -78,7 +78,7 @@ function Region({ area, label, children }: { area: string; label: string; childr
       style={{ gridArea: area }}
       className="flex min-h-0 flex-col overflow-hidden rounded-panel border border-line bg-panel"
     >
-      <h2 className="shrink-0 px-4 pt-3 pb-1 text-[13px] font-medium text-fg-muted">{label}</h2>
+      <h2 className="shrink-0 px-4 pt-3 pb-1 text-[15px] font-medium text-fg-muted">{label}</h2>
       <div className="min-h-0 flex-1 overflow-auto px-4 pb-4 pt-2">{children}</div>
     </section>
   );

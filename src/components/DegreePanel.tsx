@@ -190,24 +190,24 @@ export function DegreePanel({
   }
 
   return (
-    <div className="flex h-full flex-col gap-3">
+    <div className="flex max-h-[18rem] flex-col gap-3">
       {(programmeError || courseError) && (
         <div
           role="status"
           aria-live="polite"
-          className="rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-[12px] text-amber-100"
+          className="rounded-md border border-amber-400/30 bg-amber-400/10 px-3 py-2 text-[13px] text-amber-100"
         >
           {[programmeError, courseError].filter(Boolean).join(" ")}
         </div>
       )}
 
       <div className="grid grid-cols-[minmax(260px,1fr)_7rem_11rem] items-end gap-3">
-        <label className="flex min-w-0 flex-col gap-1 text-[12px] text-fg-faint">
+        <label className="flex min-w-0 flex-col gap-1 text-[13px] text-fg-faint">
           Programme
           <select
             value={programmeCode}
             onChange={(event) => changeProgramme(event.target.value)}
-            className="h-9 min-w-0 rounded-md border border-line bg-panel-2 px-2 text-[13px] text-fg"
+            className="h-9 min-w-0 rounded-md border border-line bg-panel-2 px-2 text-[15px] text-fg"
           >
             {programmes.length === 0 && (
               <option value={programmeCode}>{programmeCode}</option>
@@ -220,7 +220,7 @@ export function DegreePanel({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-[12px] text-fg-faint">
+        <label className="flex flex-col gap-1 text-[13px] text-fg-faint">
           Year
           <select
             aria-label="Year"
@@ -228,7 +228,7 @@ export function DegreePanel({
             onChange={(event) =>
               changeYear(Number(event.target.value) as ProgrammeYear["year"])
             }
-            className="h-9 rounded-md border border-line bg-panel-2 px-2 text-[13px] text-fg"
+            className="h-9 rounded-md border border-line bg-panel-2 px-2 text-[15px] text-fg"
           >
             {[1, 2, 3, 4, 5].map((value) => (
               <option key={value} value={value}>
@@ -239,8 +239,8 @@ export function DegreePanel({
         </label>
 
         <div>
-          <div className="text-[12px] text-fg-faint">Passed</div>
-          <div className="text-[15px]">
+          <div className="text-[13px] text-fg-faint">Passed</div>
+          <div className="text-[17px]">
             {passedCourses.length}{" "}
             {passedCourses.length === 1 ? "course" : "courses"} ·{" "}
             {passedCredits} credits
@@ -252,7 +252,7 @@ export function DegreePanel({
         <div className="flex min-h-0 flex-col gap-2">
           <label
             htmlFor={searchId}
-            className="text-[12px] text-fg-faint"
+            className="text-[13px] text-fg-faint"
           >
             Passed courses
           </label>
@@ -281,10 +281,10 @@ export function DegreePanel({
                         className="mt-1 accent-[var(--color-accent)]"
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block text-[13px] text-fg">
+                        <span className="block text-[15px] text-fg">
                           {course.title}
                         </span>
-                        <span className="block font-mono text-[11px] text-fg-faint">
+                        <span className="block font-mono text-[12px] text-fg-faint">
                           {course.code} · {course.credits} credits · semester{" "}
                           {course.semester}
                         </span>
@@ -299,7 +299,7 @@ export function DegreePanel({
 
         <label
           htmlFor={mathsId}
-          className="flex flex-col gap-1 text-[12px] text-fg-faint"
+          className="flex flex-col gap-1 text-[13px] text-fg-faint"
         >
           Maths qualification
           <input
@@ -307,9 +307,9 @@ export function DegreePanel({
             value={background.maths ?? ""}
             onChange={(event) => changeBackground(event.target.value)}
             placeholder="e.g. A-level A*"
-            className="h-9 rounded-md border border-line bg-panel-2 px-2 text-[13px] text-fg placeholder:text-fg-faint"
+            className="h-9 rounded-md border border-line bg-panel-2 px-2 text-[15px] text-fg placeholder:text-fg-faint"
           />
-          <span className="text-[11px] leading-snug text-fg-faint">
+          <span className="text-[12px] leading-snug text-fg-faint">
             Used only when a conditional DRPS rule needs it.
           </span>
         </label>

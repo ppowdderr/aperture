@@ -83,7 +83,7 @@ export function WeekView({ semester, slots, courses, tintOf }: WeekViewProps) {
   const byDay = DAYS.map((_, day) => layoutLanes(mergeWeekRanges(slots.filter((s) => s.semester === semester && s.day === day))));
 
   return (
-    <div className="grid min-h-0 flex-1 grid-cols-[2rem_1fr] grid-rows-[1.25rem_1fr] gap-x-2 gap-y-1 text-[11px] text-fg-faint">
+    <div className="grid min-h-0 flex-1 grid-cols-[2.25rem_1fr] grid-rows-[1.5rem_1fr] gap-x-2 gap-y-1 text-[13px] text-fg-faint">
       <div className="font-medium text-fg-muted">S{semester}</div>
       <div className="grid grid-cols-5" aria-hidden>
         {DAYS.map((d) => (
@@ -123,7 +123,7 @@ export function WeekView({ semester, slots, courses, tintOf }: WeekViewProps) {
                 title={title}
                 data-lane={lane}
                 data-lanes={lanes}
-                className="absolute overflow-hidden rounded-[4px] px-1.5 py-1 leading-tight text-fg"
+                className="absolute overflow-hidden rounded-[4px] px-2 py-1 leading-snug text-fg"
                 style={{
                   left: `calc(${day * 20}% + ${(20 / lanes) * lane}% + 2px)`,
                   width: `calc(${20 / lanes}% - 3px)`,
@@ -132,8 +132,11 @@ export function WeekView({ semester, slots, courses, tintOf }: WeekViewProps) {
                   background: tintOf(slot.course),
                 }}
               >
-                <div className="truncate font-mono text-[10px]">{lanes > 1 ? slot.course.replace(/^[A-Z]+/, "") : slot.course}</div>
-                {end - start >= 60 && lanes === 1 && <div className="truncate text-fg-muted">{slot.activity}</div>}
+                <div className="truncate text-[12px]">
+                  <span className="font-mono">{lanes > 1 ? slot.course.replace(/^[A-Z]+/, "") : slot.course}</span>
+                  {lanes === 1 && <span className="ml-1.5 text-fg">{titles.get(slot.course)}</span>}
+                </div>
+                {lanes === 1 && end - start >= 60 && <div className="truncate text-[12px] text-fg-muted">{slot.activity}</div>}
               </div>
             );
           }),
