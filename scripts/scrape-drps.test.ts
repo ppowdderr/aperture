@@ -35,6 +35,14 @@ describe("parseProgramme(UTCMPSI)", () => {
     expect(sched.schedules).toMatch(/Level 7 and 8 courses/);
     expect(sched.minCredits).toBe(40); expect(sched.maxCredits).toBe(60);
   });
+  it("year 2: a bare schedule rule of exactly 20 credits", () => {
+    const y2 = years[1];
+    expect(y2.compulsory).toHaveLength(5);
+    expect(y2.groups).toHaveLength(1);
+    expect(y2.groups[0]).toMatchObject({ id: "R1", minCredits: 20, maxCredits: 20, courses: [] });
+    expect(y2.groups[0].schedules).toMatch(/Level 7 and 8/);
+    expect(y2.groups[0].parent).toBeUndefined();
+  });
   it("captures progression prose and every course code is well-formed", () => {
     expect(years[0].notesText).toMatch(/must pass Informatics 1/);
     const codes = years.flatMap((y) => [...y.compulsory, ...y.groups.flatMap((g) => g.courses)]);

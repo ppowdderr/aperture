@@ -55,7 +55,17 @@
       "INFR08032",
       "INFR08031"
     ],
-    "groups": [],
+    "groups": [
+      {
+        "id": "R1",
+        "title": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
+        "minCredits": 20,
+        "maxCredits": 20,
+        "courses": [],
+        "schedules": "Level 7 and 8 courses in Schedules A to Q, S, T, W and Y",
+        "notesText": "These are courses in all Schools other than Medicine, or the Centre for Open Learning."
+      }
+    ],
     "notesText": "Before making your course choices make sure you have discussed them with your Student Adviser, or someone in your Student Support Team.",
     "drpsUrl": "https://www.drps.ed.ac.uk/25-26/dpt/utcmpsi.htm#dpt-year-2"
   },

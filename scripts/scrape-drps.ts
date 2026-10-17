@@ -84,37 +84,46 @@ export function parseProgramme(html: string, programmeCode: string): ProgrammeYe
     });
 
     const groups: OptionGroup[] = [];
-    container.children(".dpt-block").each((bi, block) => {
-      const head = $(block).children(".dpt-block__header");
-      const title = clean(head.find("h3").first().text());
-      const idMatch = title.match(/Group\s+([A-Z0-9]+)/i);
-      const id = idMatch ? idMatch[1].toUpperCase() : String(bi + 1);
-      const blockRule = clean(head.clone().children("h3").remove().end().text());
-      const { min, max } = parseCreditRule(blockRule);
-      const children: OptionGroup[] = [];
-      $(block).find(".dpt-block__contents > .panel").each((ri, rule) => {
-        const r = $(rule);
-        const ruleText = clean(r.find(".dpt-rule__header span").text());
-        const range = parseCreditRule(ruleText);
-        const schedLink = r.find(".dpt-rule__header a").first();
-        const courses = courseCodes($, rule);
-        children.push({
-          id: `${id}.${ri + 1}`,
-          parent: id,
-          title: clean(r.find(".dpt-rule__title").first().text()) || ruleText,
-          minCredits: range.min,
-          maxCredits: range.max,
-          courses,
-          ...(schedLink.length && courses.length === 0 ? { schedules: clean(schedLink.text()) } : {}),
-          notesText: clean(r.find(".dpt-help--rule [data-uoeid]").text()),
-        });
+    const parseRule = (rule: AnyNode, id: string, parent?: string): OptionGroup => {
+      const r = $(rule);
+      const ruleText = clean(r.find(".dpt-rule__header span").text());
+      const range = parseCreditRule(ruleText);
+      const schedLink = r.find(".dpt-rule__header a").first();
+      const courses = courseCodes($, rule);
+      return {
+        id,
+        ...(parent ? { parent } : {}),
+        title: clean(r.find(".dpt-rule__title").first().text()) || ruleText,
+        minCredits: range.min,
+        maxCredits: range.max,
+        courses,
+        ...(schedLink.length && courses.length === 0 ? { schedules: clean(schedLink.text()) } : {}),
+        notesText: clean(r.find(".dpt-help--rule [data-uoeid]").text()),
+      };
+    };
+    // Option rules follow the "Course options" heading: either grouped in .dpt-block (Group A ...) or
+    // a bare rule panel (e.g. Year 2: "Select exactly 20 credits from Level 7 and 8 courses in Schedules ...").
+    let standalone = 0;
+    container.children("h4").filter((_, h4) => /option/i.test($(h4).text())).first()
+      .nextAll(".dpt-block, .panel").each((_, el) => {
+        if (!$(el).hasClass("dpt-block")) {
+          groups.push(parseRule(el, `R${++standalone}`));
+          return;
+        }
+        const head = $(el).children(".dpt-block__header");
+        const title = clean(head.find("h3").first().text());
+        const idMatch = title.match(/Group\s+([A-Z0-9]+)/i);
+        const id = idMatch ? idMatch[1].toUpperCase() : `B${groups.length + 1}`;
+        const blockRule = clean(head.clone().children("h3").remove().end().text());
+        const { min, max } = parseCreditRule(blockRule);
+        const children: OptionGroup[] = [];
+        $(el).find(".dpt-block__contents > .panel").each((ri, rule) => children.push(parseRule(rule, `${id}.${ri + 1}`, id)));
+        groups.push({
+          id, title: title || `Group ${id}`, minCredits: min, maxCredits: max,
+          courses: [...new Set(children.flatMap((c) => c.courses))],
+          notesText: blockRule,
+        }, ...children);
       });
-      groups.push({
-        id, title: title || `Group ${id}`, minCredits: min, maxCredits: max,
-        courses: [...new Set(children.flatMap((c) => c.courses))],
-        notesText: blockRule,
-      }, ...children);
-    });
 
     years.push(programmeYearSchema.parse({
       programmeCode: code, programmeTitle, year, compulsory: [...new Set(compulsory)], groups, notesText,
