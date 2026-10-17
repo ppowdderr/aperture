@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AskBar } from "@/components/AskBar";
 import { DegreePanel } from "@/components/DegreePanel";
 import { Results } from "@/components/Results";
 import { RulesLedger } from "@/components/RulesLedger";
@@ -143,6 +144,7 @@ export function Home() {
       week={
         <div className="flex min-h-full flex-col gap-4">
           <WeekGrid value={preferences} onChange={setPreferences} />
+          <AskBar value={preferences} onChange={setPreferences} />
           <form
             className="flex shrink-0 flex-col gap-2"
             onSubmit={(e) => {
@@ -162,16 +164,6 @@ export function Home() {
                 {solve.status === "loading" ? "Solving…" : "Solve"}
               </button>
             </div>
-            <label htmlFor="wants" className="mt-1 text-[13px] text-fg-faint">
-              What you want, in your own words
-            </label>
-            <textarea
-              id="wants"
-              rows={3}
-              disabled
-              placeholder="No 9ams on Monday or Tuesday, Friday off, something with machine learning or databases, keep King's Buildings days together, no gaps longer than two hours."
-              className="min-h-[4.5rem] max-h-40 w-full resize-y rounded-md border border-line bg-panel-2 px-3 py-2 placeholder:text-fg-faint disabled:opacity-70 field-sizing-content"
-            />
           </form>
         </div>
       }
