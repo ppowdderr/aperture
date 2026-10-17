@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Chat } from "@/components/Chat";
 import { DegreePanel } from "@/components/DegreePanel";
+import { PreferencesSettings } from "@/components/PreferencesSettings";
 import { Results, tintFor } from "@/components/Results";
 import { RuleConfirm } from "@/components/RuleConfirm";
 import { RulesLedger } from "@/components/RulesLedger";
@@ -30,7 +31,7 @@ export function Home() {
   const [preferences, setPreferences] = useState<Preferences>(() => loadPreferences(emptyPreferences()));
   const [selection, setSelection] = useState<{ of: Solution[]; index: number } | null>(null);
   const [semester, setSemester] = useState<1 | 2>(1);
-  const [sheet, setSheet] = useState<"degree" | "rules" | null>(null);
+  const [sheet, setSheet] = useState<"degree" | "rules" | "settings" | null>(null);
 
   useEffect(() => savePreferences(preferences), [preferences]);
   useEffect(() => {
@@ -77,6 +78,12 @@ export function Home() {
   const captionTone = dataError || solve.status === "error" ? "text-amber-200" : "text-fg-faint";
   const programmeTitle = data?.years[0]?.programmeTitle ?? PROGRAMME;
   const rules = current?.rulesSatisfied ?? [];
+  const sheetTitle =
+    sheet === "degree"
+      ? "Your degree"
+      : sheet === "rules"
+        ? "Rules this plan satisfies"
+        : "Preferences settings";
 
   function exportProfile() {
     if (!student) return;
@@ -145,6 +152,9 @@ export function Home() {
             </button>
             <button type="button" onClick={() => fileInput.current?.click()} className={ghostButton}>
               Import
+            </button>
+            <button type="button" onClick={() => setSheet("settings")} className={ghostButton}>
+              Settings
             </button>
             <input
               ref={fileInput}
@@ -270,12 +280,12 @@ export function Home() {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label={sheet === "degree" ? "Your degree" : "Rules this plan satisfies"}
+            aria-label={sheetTitle}
             className="@container flex h-full w-[min(48rem,100vw)] flex-col gap-4 overflow-auto border-l border-line bg-panel px-6 py-5 shadow-[0_0_48px_rgba(0,0,0,0.5)]"
             onPointerDown={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-[17px] font-medium tracking-tight">{sheet === "degree" ? "Your degree" : "Rules this plan satisfies"}</h2>
+              <h2 className="text-[17px] font-medium tracking-tight">{sheetTitle}</h2>
               <button type="button" onClick={() => setSheet(null)} className={ghostButton}>
                 Done
               </button>
@@ -301,6 +311,13 @@ export function Home() {
               </div>
             )}
             {sheet === "rules" && <RulesLedger rules={rules} />}
+            {sheet === "settings" && data && (
+              <PreferencesSettings
+                value={preferences}
+                courses={data.courses}
+                onChange={setPreferences}
+              />
+            )}
           </div>
         </div>
       )}
